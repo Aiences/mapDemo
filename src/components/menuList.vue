@@ -41,71 +41,78 @@
 </template>
 
 <script>
-import person from "@/assets/images/icon_person.png"
+import person from "@/assets/images/icon_person.png";
 export default {
-  name: 'meunList',
+  name: "meunList",
   data() {
     return {
-      userAccount: '',//用户登录账号
+      userAccount: "", //用户登录账号
       person: person,
       menuList: [],
       activeMenu: this.$route.path,
       defaultOpeneds: [],
-    }
+    };
   },
-  mounted: function() {
-    this.menuList=[
+  mounted: function () {
+    this.menuList = [
       {
-        "name": "地图",
-        "path": "/home",
-        "children": [],
-        "icon": "iconfont icon-home"
-      },{
-        "name": "arcgis地图",
-        "path": "/arcgismap",
-        "icon": "iconfont icon-china",
-        "children": []
-      },{
-        "name": "地图查询",
-        "path": "/querymap",
-        "icon": "iconfont icon-china",
-        "children": []
-      },{
-        "name": "面特征查询",
-        "path": "/queryPolygon",
-        "icon": "iconfont icon-china",
-        "children": []
-      }
+        name: "POI",
+        path: "/analyse",
+        icon: "iconfont icon-china",
+        children: [],
+      },
+      {
+        name: "地图",
+        path: "/home",
+        children: [],
+        icon: "iconfont icon-home",
+      },
+      {
+        name: "arcgis地图",
+        path: "/arcgismap",
+        icon: "iconfont icon-china",
+        children: [],
+      },
+      {
+        name: "地图查询",
+        path: "/querymap",
+        icon: "iconfont icon-china",
+        children: [],
+      },
+      {
+        name: "面特征查询",
+        path: "/queryPolygon",
+        icon: "iconfont icon-china",
+        children: [],
+      },
     ];
 
     this.defaultOpenedsLoad();
   },
   methods: {
     // 菜单点击事件
-    handleSelect(key,keyPath) {
-      this.activeMenu=key;
+    handleSelect(key) {
+      this.activeMenu = key;
     },
 
     // 默认展开菜单
     defaultOpenedsLoad() {
-      this.defaultOpeneds=[];
-      for(let item of this.menuList) {
-        if(item.children.length>0) {
+      this.defaultOpeneds = [];
+      for (let item of this.menuList) {
+        if (item.children.length > 0) {
           this.defaultOpeneds.push(item.path);
         }
       }
-    }
-
+    },
   },
   watch: {
-    $route(to,from) {
-      this.activeMenu=to.path
+    $route(to) {
+      this.activeMenu = to.path;
       // to , from 分别表示从哪跳转到哪，都是一个对象
       // to.path  ( 表示的是要跳转到的路由的地址 eg: /home );
-    }
-
-  }
-}
+    },
+  },
+};
 </script>
 <style lang="scss" src="../styles/layout.scss"></style>
 

@@ -14,6 +14,8 @@ const router=new Router({
         {path: '/arcgismap',component: () => import('@/views/mapShow'),name: 'mapShow'},
         {path: '/querymap',component: () => import('@/views/queryMap'),name: 'queryMap'},
         {path: '/queryPolygon',component: () => import('@/views/queryPolygon'),name: 'queryPolygon'},
+        {path: '/analyse',component: () => import('@/views/analyse'),name: 'analyse'},
+
       ]
 
     },

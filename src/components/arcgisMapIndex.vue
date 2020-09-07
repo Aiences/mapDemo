@@ -39,13 +39,13 @@ export default {
     // 初始化地图
     initMap() {
       this.map=new this.gisConstructor.Map({
-        basemap: "gray-vector",
+        basemap: "streets",
       });
 
       this.view=new this.gisConstructor.MapView({
         container: "arcgisMapIndex",
         map: this.map,
-        center: [-122.3487846,47.58907],
+        // center: [-122.3487846,47.58907],
         zoom: 11,
         padding: {
           right: 300
