@@ -98,8 +98,6 @@ export default {
           // the completed graphic to the layer by default.
           // polygonGraphicsLayer.remove(event.graphic);
 
-          console.log(event.graphic.geometry,'=========create')
-
           // use the graphic.geometry to query features that intersect it
           // selectFeatures(event.graphic.geometry);
         }
