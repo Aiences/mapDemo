@@ -157,7 +157,7 @@ export default {
 
       this.map.add(seattleLayer);
 
-      this.watchMouseOver(seattleLayer)
+      // this.watchMouseOver(seattleLayer)
     },
 
 
