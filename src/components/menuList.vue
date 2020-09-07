@@ -58,23 +58,23 @@ export default {
       {
         name: "POI",
         path: "/analyse",
-        icon: "iconfont icon-china",
         children: [],
+        icon: "iconfont icon-home",
       },
       {
-        name: "地图",
+        name: "图层勾选",
         path: "/home",
         children: [],
         icon: "iconfont icon-home",
       },
       {
-        name: "arcgis地图",
+        name: "点线面绘制",
         path: "/arcgismap",
         icon: "iconfont icon-china",
         children: [],
       },
       {
-        name: "地图查询",
+        name: "任意查询",
         path: "/querymap",
         icon: "iconfont icon-china",
         children: [],
