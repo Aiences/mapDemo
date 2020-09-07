@@ -1,0 +1,265 @@
+.row-bg{
+    box-shadow:0px 3px 16px 0px rgba(0, 0, 0, 0.28);
+  .el-button{padding:0}
+    .logo {
+        float:left;
+        margin:9px 10px 0 56px;
+        padding-top:-5px;
+        width:39px;
+        height:32px;
+    }
+    .sys_title {
+        font-size:18px;
+        font-weight:400;
+        color:rgba(88,88,88,1);
+        line-height:50px;
+    }
+    .enter_map {
+        width:130px;
+        height:32px;
+        background:rgba(69,83,115,1);
+        border-radius:25px;
+        font-size:12px;
+        font-weight:400;
+        color:rgba(255,255,255,1);
+        float:right;
+        margin-top:11px;
+    }
+    .circle_block {
+        float:right;
+        width:34px;
+        height:34px;
+        position: relative;
+        z-index:11;
+        margin:11px 0 0 15px;
+        text-align:center;
+        line-height:32px;
+        .notice {
+            width:12px;
+            height:12px;
+            background:rgba(250,46,46,1);
+            border-radius:50%;
+            position: absolute;
+            z-index:12;
+            top:-2px;
+            right:-2px;
+            
+        }
+        i.icon-user{
+            width:18px;
+            height:19px;
+        }
+        .circle_box{
+            width:32px;
+            height:32px;
+            background:rgba(255,255,255,1);
+            border:1px solid rgba(197, 197, 197, 1);
+            border-radius:50%;
+        }
+
+		
+    }
+    .circle_block:first-child{
+        margin-right:40px;
+    }
+}
+.headBarDialog{
+    .el-dialog__header{
+        padding: 5px 20px;
+        line-height: 0;
+        .el-dialog__title{
+            font-size:14px;
+        }
+        .el-dialog__headerbtn{
+            top:9px;
+        }
+    }
+    .el-dialog__body{
+        padding: 5px 10px;
+        font-size: 13px;
+        line-height: 20px;
+        .el-row{
+            padding: 5px
+        }
+        .el-textarea__inner,.el-input__inner{
+            padding: 0 5px;
+        }
+    }
+    .el-dialog__footer {
+        padding: 5px 10px;
+        line-height: 0;
+    } 
+}
+
+.menu_control {
+    // display:block;
+    position: absolute;
+    top:0px;
+    left:12px;
+    font-size:14px;
+    z-index:999
+}
+.mene_list_open {
+    width:214px!important;
+}
+.mene_list_close {
+    width:0px!important;
+}
+.el-menu{
+    border:none!important;
+}
+.user_block {
+    width: 100%;
+    height: 70px;
+    line-height:70px;
+    color:#fff;
+    .icon_person {
+        width:45px;
+        height:45px;
+        float:left;
+        margin:13px 10px 0 22px;
+    }
+    span{
+        float:left;
+        font-size:14px;
+        font-weight:400;
+        color:rgba(254,255,254,1);
+    }
+}
+.el-submenu__title{
+    // padding:0!important;
+    // width:164px;
+    // margin-left:25px;
+    // border-bottom:1px solid #646262;
+    font-size:14px;
+    color:#fff;
+    i{
+        color:#fff;
+        vertical-align: -1px;
+    }
+    i.iconfont{
+        margin:0 12px 0 4px;
+        color:#fff;
+    }
+    
+}
+.el-menu-item {
+    a{
+        display:block;
+        width:100%;
+        height:100%;
+        color:#fff!important;
+        i{
+            color:#fff!important;
+            vertical-align: -1px;
+            margin:0 4px;
+        }
+    }  
+}
+.el-menu-item.is-active {
+    background:#fff!important;
+    a{
+        display:block;
+        width:100%;
+        height:100%;
+        color:#4F4F4F!important;       
+        i{
+            color:#4F4F4F!important
+        }
+    }   
+}
+.icon-dialogbox2,.icon-setup,.icon-export{
+	vertical-align: -1px;
+	margin:0 20px 0 10px!important;
+}
+.el-dropdown-menu {
+	.user_box {
+		width:196px;
+		height:66px;
+		border-bottom:1px solid rgba(223,233,255,1);
+		line-height:66px;
+		span {
+			font-size:12px;
+			font-family:MicrosoftYaHei;
+			font-weight:400;
+			color:rgba(44,44,44,1);
+		}
+		.admin_person {
+			margin:5.5px 13px;
+			width:45px;
+			height:45px;
+			float:left;
+		}
+	}
+	.notice_box{
+		height:42px;
+		width:332px;
+		padding:0 15px;
+		border-bottom:1px solid rgba(223,233,255,1);
+        line-height:42px;
+        font-size:12px;
+		p{
+			font-size:12px;
+			font-weight:400;
+            color:rgba(68,68,68,1);
+            width:100%;
+			span{
+				float:right;
+				font-size:12px;
+				font-weight:400;
+				color:rgba(18,138,214,1);
+				cursor: pointer;
+			}
+		}
+	}
+	.el-dropdown-menu__item {
+		height:50px;
+		line-height:50px;
+		padding:0px 10px;
+		clear: both;
+	}
+	.popper__arrow {
+		display:none;
+	}
+	.msg_icon_1,.msg_icon_2,.msg_icon_3 {
+		float:left;
+		width:47px;
+		height:47px;
+		border-radius:50%;
+		margin:8px 20px 8px 17px;
+		color:#fff;
+		text-align:center;
+	}
+	.bg_green {
+		background:rgba(90,218,153,1);
+	}
+	.bg_red {
+		background:#FF6073;
+	}
+	.bg_blue {
+		background:#66A3FF;
+	}
+	.msg_box {
+		float:left;
+		width:250px;
+		p:nth-child(1){
+			font-size:12px;
+			font-weight:400;
+			color:#444444;
+			line-height:170%;
+			margin-top:8px;
+		}
+		p:nth-child(2){
+			font-size:12px;
+			font-weight:400;
+			color:#A8A8A8;
+			line-height:170%;
+			.msg_num{
+				color:#128AD6;
+			}
+			.msg_day {
+				float:right;
+			}
+		}
+	}
+}
