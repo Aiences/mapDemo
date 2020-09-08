@@ -53,8 +53,8 @@ export default {
       defaultOpeneds: [],
     };
   },
-  mounted: function () {
-    this.menuList = [
+  mounted: function() {
+    this.menuList=[
       {
         name: "POI",
         path: "/analyse",
@@ -79,12 +79,12 @@ export default {
         icon: "iconfont icon-china",
         children: [],
       },
-      {
-        name: "面特征查询",
-        path: "/queryPolygon",
-        icon: "iconfont icon-china",
-        children: [],
-      },
+      // {
+      //   name: "面特征查询",
+      //   path: "/queryPolygon",
+      //   icon: "iconfont icon-china",
+      //   children: [],
+      // },
     ];
 
     this.defaultOpenedsLoad();
@@ -92,14 +92,14 @@ export default {
   methods: {
     // 菜单点击事件
     handleSelect(key) {
-      this.activeMenu = key;
+      this.activeMenu=key;
     },
 
     // 默认展开菜单
     defaultOpenedsLoad() {
-      this.defaultOpeneds = [];
-      for (let item of this.menuList) {
-        if (item.children.length > 0) {
+      this.defaultOpeneds=[];
+      for(let item of this.menuList) {
+        if(item.children.length>0) {
           this.defaultOpeneds.push(item.path);
         }
       }
@@ -107,7 +107,7 @@ export default {
   },
   watch: {
     $route(to) {
-      this.activeMenu = to.path;
+      this.activeMenu=to.path;
       // to , from 分别表示从哪跳转到哪，都是一个对象
       // to.path  ( 表示的是要跳转到的路由的地址 eg: /home );
     },
