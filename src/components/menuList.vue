@@ -56,6 +56,12 @@ export default {
   mounted: function() {
     this.menuList=[
       {
+        name: "特征专题",
+        path: "/feature",
+        children: [],
+        icon: "iconfont icon-home",
+      },
+      {
         name: "POI",
         path: "/analyse",
         children: [],

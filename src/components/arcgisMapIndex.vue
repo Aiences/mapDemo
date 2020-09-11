@@ -1,9 +1,9 @@
 <template>
   <div id="arcgisMapIndex">
     <!-- 鹰眼 -->
-    <div id="overView">
+    <!-- <div id="overView">
       <div id="extentDiv" ref="extentDiv" :style="styleObject"></div>
-    </div>
+    </div>-->
   </div>
 </template>
 <script>
@@ -97,7 +97,7 @@ export default {
       })
 
       this.map.add(tiledLayer);
-      // this.map.add(tiledLayerAnno);
+      this.map.add(tiledLayerAnno);
 
 
       let obj={
@@ -108,7 +108,7 @@ export default {
 
       bus.$emit('initmap',obj)
 
-      this.initOverViewMap()
+      // this.initOverViewMap()
 
     },
 
