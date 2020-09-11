@@ -90,7 +90,7 @@ export default {
 
       // this.showAllGraphics()
 
-      this.watchMouseMove()
+      // this.watchMouseMove()
 
       this.watchMouseClick()
 
@@ -164,15 +164,61 @@ export default {
     },
 
 
-
-
     //监听点击
     watchMouseClick() {
+      let _this=this
+
       this.view.on("click",(event) => {
-        console.log(event,"===========");
+        this.view.hitTest(event).then(function(response) {
+          if(response.results.length) {
+            var graphic=response.results.filter(function(result) {
+              return result.graphic.layer===_this.featureLayer;
+            })[0].graphic;
+
+            _this.toRunQuery(graphic)
+
+            _this.openPopup(graphic)
+
+            if(_this.highlight) {
+              _this.highlight.remove()
+              _this.highlight=null
+            }
+
+            _this.view.whenLayerView(graphic.layer).then(function(layerView) {
+              _this.highlight=layerView.highlight(graphic);
+            });
+          }
+        });
+
+
 
       });
     },
+
+
+    //查询
+    toRunQuery(geometry) {
+      let self=this
+      let query=this.featureLayer.createQuery()
+      query.geometry=geometry
+      query.spatialRel="intersects"
+      query.geometryType="polygon"
+      query.outFields="*"
+
+      this.featureLayer.queryFeatures(query).then(function(response) {
+        if(response&&response.features.length>0) {
+          // @ts-ignore
+          response.features.map(i => {
+            console.log(i)
+          })
+
+        } else {
+          self.$message.error('当前面内无数据！')
+        }
+      })
+
+    }
+
   },
 };
 </script>
