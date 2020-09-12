@@ -98,6 +98,18 @@ export default {
 
             _this.openPopup(graphic)
 
+
+            let query=_this.featureLayer.createQuery();
+            query.where="街区编号 = 'graphic.attributes.OBJECTID_1'";
+            query.outFields=["*"];
+
+            _this.featureLayer.queryFeatures(query)
+              .then(function(response) {
+                console.log(response,'=======response')
+                // returns a feature set with features containing the following attributes
+                // STATE_NAME, COUNTY_NAME, POPULATION, POP_DENSITY
+              });
+
             if(_this.highlight) {
               _this.highlight.remove()
               _this.highlight=null
