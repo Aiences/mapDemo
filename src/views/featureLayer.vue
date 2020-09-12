@@ -63,27 +63,92 @@ export default {
 
 
     //展示特征专题图
-    getFeatureLayer(url) {
-      this.featureLayer=new this.gisConstructor.FeatureLayer({
-        url: url,
-        labelingInfo: [{
-          labelExpression: "[街区编号]",
-          labelPlacement: "always-horizontal",
-          symbol: {
-            type: "text",
-            color: '#fff',
-            font: {
-              weight: "bolder",
-              size: 10
-            }
-          }
-        }],
-        blendMode: "multiply",
-        opacity: 0.6
-      })
+      getFeatureLayer(url,name) {
+          var globalColors = ['rgba(151,151,151,0.4)', 'rgba(73,143,238,0.4)', 'rgba(0,204,102,0.4)', 'rgba(255,153,51,0.4)', 'rgba(255,92,77,0.4)'];
 
-      this.map.add(this.featureLayer)
-      this.watchMapClick()
+          function getSimpleFillSymbol(color) {
+              return {
+                  type: "simple-fill",
+                  color: color,
+                  outline: {
+                      style: 'solid',
+                      width: 1,
+                      color: '#000'
+                  }
+              }
+          };
+
+          var renderer = {
+              type: "class-breaks",
+              field: name,
+              defaultSymbol: getSimpleFillSymbol(globalColors[0]),
+              classBreakInfos: [
+                  {
+                      minValue: 0,
+                      maxValue: 20,
+                      symbol: getSimpleFillSymbol(globalColors[0])
+                  }, {
+                      minValue: 21,
+                      maxValue: 40,
+                      symbol: getSimpleFillSymbol(globalColors[1])
+                  },
+                  {
+                      minValue: 41,
+                      maxValue: 60,
+                      symbol: getSimpleFillSymbol(globalColors[2])
+                  },
+                  {
+                      minValue: 61,
+                      maxValue: 80,
+                      symbol: getSimpleFillSymbol(globalColors[3])
+                  },
+                  {
+                      minValue: 81,
+                      symbol: getSimpleFillSymbol(globalColors[4])
+                  },
+              ]
+          };
+
+          function round(n, d) {
+              if (d == undefined) {
+                  d = 4;
+              }
+              var y = Math.pow(10, d);
+              return Math.round(n * y) / y;
+          }
+
+          this.featureLayer = new this.gisConstructor.FeatureLayer({
+              url: url,
+              labelingInfo: [{
+                  labelExpression: "[街区编号]",
+                  labelPlacement: "always-horizontal",
+                  symbol: {
+                      type: "text",
+                      color: '#fff',
+                      font: {
+                          weight: "bolder",
+                          size: 10
+                      }
+                  }
+              }],
+              outFields: [name],
+              renderer: renderer,
+              popupTemplate: {
+                  actions: [],
+                  overwriteActions: true,
+                  content: function (g) {
+                      console.log(g);
+                      var div = document.createElement('div');
+                      div.className = 'popup-div';
+                      div.innerHTML = round(g.graphic.attributes[name]);
+                      return div;
+                  }
+              },
+              blendMode: "multiply"
+          });
+
+          this.map.add(this.featureLayer);
+          //this.watchMapClick();
 
     },
 
@@ -96,19 +161,8 @@ export default {
               return result.graphic.layer===_this.featureLayer;
             })[0].graphic;
 
-            _this.openPopup(graphic)
-
-
-            let query=_this.featureLayer.createQuery();
-            query.where="街区编号 = 'graphic.attributes.OBJECTID_1'";
-            query.outFields=["*"];
-
-            _this.featureLayer.queryFeatures(query)
-              .then(function(response) {
-                console.log(response,'=======response')
-                // returns a feature set with features containing the following attributes
-                // STATE_NAME, COUNTY_NAME, POPULATION, POP_DENSITY
-              });
+              _this.openPopup(graphic);
+              console.log(graphic);
 
             if(_this.highlight) {
               _this.highlight.remove()

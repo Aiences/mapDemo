@@ -3,3 +3,7 @@ node_modules/
 dist/
 npm-debug.log
 /.idea
+/.vs
+/bin
+/public/4.16
+/obj/Debug
