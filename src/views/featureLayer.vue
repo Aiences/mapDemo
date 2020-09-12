@@ -49,6 +49,13 @@ export default {
       this.getFeatureLayer(this.searchUrl,msg.name)
     })
 
+    //勾选poi图层
+    bus.$on('layerSelect',(layers) => {
+      console.log(layers,'========layers')
+
+    })
+
+
   },
   methods: {
 
