@@ -30,6 +30,21 @@
           </li>
         </ul>
       </div>
+
+      <!-- <div>
+        <ul class="menu_right_block">
+          <li
+            v-for="item of childList"
+            :key="item.value"
+            @click="choosePoiLayer(item)"
+            :class="{'choosed':item.checked}"
+          >
+            <img src="@/assets/images/home/choosed.png" class="choosed_box" v-if="item.checked" />
+            <span class="label_box">{{item.label}}</span>
+            <span class="count_box">10</span>
+          </li>
+        </ul>
+      </div>-->
     </div>
   </div>
 </template>
@@ -112,7 +127,8 @@ export default {
         },
         {label: '1000~2000',color: 'rgba(73,143,238,0.4)'},
         {label: '0~1000',color: 'rgba(151,151,151,0.4)'}
-      ]
+      ],
+      paramList: {0: 'Avg_商业',1: 'Avg_交通',2: 'Avg_超市',3: 'Avg_教育',4: 'Avg_医疗',5: '',6: '',7: 'Avg_环境',8: '',9: ''}
     }
   },
   mounted() {
@@ -127,6 +143,11 @@ export default {
       this.transLayer()
     },
 
+    choosePoiLayer() {
+
+
+    },
+
     chooseLayer(item) {
       this.activeLayer=item.id
       this.activeRoute=item.value
@@ -137,7 +158,12 @@ export default {
     transLayer() {
       let httpString=this.httpServer+this.findMap[this.activeType]+this.MapServer+this.activeRoute
 
-      bus.$emit('featureLayerSelect',httpString)
+      let obj={
+        httpString: httpString,
+        name: this.paramList[this.activeType]
+      }
+
+      bus.$emit('featureLayerSelect',obj)
 
     },
 
@@ -208,7 +234,7 @@ export default {
   box-sizing: border-box;
   padding: 16px 0;
   max-height: 500px;
-  width: 260px;
+  width: 250px;
   background: #ffffff;
   box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.06);
   border-radius: 12px;
