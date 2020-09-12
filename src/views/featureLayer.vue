@@ -197,6 +197,9 @@ export default {
                     return div;
                 }
             },
+            spatialReference: {
+                wkid: 4326
+            },
             blendMode: "multiply"
         });
 
