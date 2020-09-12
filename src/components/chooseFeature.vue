@@ -22,7 +22,7 @@
         >
           <img src="@/assets/images/home/choosed.png" class="choosed_box" v-if="item.checked" />
           <span class="label_box">{{item.label}}</span>
-          <span class="count_box">10</span>
+          <span class="count_box">{{item.count}}</span>
         </li>
       </ul>
     </div>
@@ -195,8 +195,22 @@ export default {
     }
   },
   mounted() {
+    this.list.forEach(item => {
+      if(item.layerList) {
+        item.layerList.forEach(obj => {
+          let id=item.value
+          let route=obj.value
+          let httpString=this.httpServer+this.findMap[id]+this.MapServer+route
+          obj.count=0
+          obj.url=httpString
+        })
+      }
+
+    })
+
     this.menuList=this.list[this.activeType].children
     this.childList=this.list[this.activeType].layerList
+
     this.transLayer()
   },
   methods: {
@@ -205,8 +219,8 @@ export default {
       this.menuList=this.list[this.activeType].children
       this.activeRoute=this.menuList[this.activeLayer].value
       this.transLayer()
-          this.childList = this.list[this.activeType].layerList
-          bus.$emit('childList', this.childList )
+      this.childList=this.list[this.activeType].layerList
+      bus.$emit('childList',this.childList)
 
     },
 
@@ -215,14 +229,10 @@ export default {
 
       let layers=[]
       this.list.forEach((item) => {
-        console.log(item,'=======item')
         if(item.layerList) {
           item.layerList.forEach((obj) => {
             if(obj.checked) {
-              let id=item.value
-              let route=obj.value
-              let httpString=this.httpServer+this.findMap[id]+this.MapServer+route
-              layers.push(httpString)
+              layers.push(obj.url)
             }
           });
         }
