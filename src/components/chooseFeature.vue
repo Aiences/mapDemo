@@ -205,7 +205,9 @@ export default {
       this.menuList=this.list[this.activeType].children
       this.activeRoute=this.menuList[this.activeLayer].value
       this.transLayer()
-      this.childList=this.list[this.activeType].layerList
+          this.childList = this.list[this.activeType].layerList
+          bus.$emit('childList', this.childList )
+
     },
 
     choosePoiLayer(item) {

@@ -49,13 +49,18 @@ export default {
       this.getFeatureLayer(this.searchUrl,msg.name)
     })
 
-    //勾选poi图层
-    bus.$on('layerSelect',(layers) => {
-      console.log(layers,'========layers')
+      //
+      bus.$on('childList', (childList) => {
+          console.log(childList, '========childList')
 
-    })
+      })
 
 
+      //勾选poi图层
+      bus.$on('layerSelect', (layers) => {
+          console.log(layers, '========layers')
+
+      })
   },
   methods: {
 
@@ -95,22 +100,22 @@ export default {
             maxValue: 20,
             symbol: getSimpleFillSymbol(globalColors[0])
           },{
-            minValue: 21,
+            minValue: 20,
             maxValue: 40,
             symbol: getSimpleFillSymbol(globalColors[1])
           },
           {
-            minValue: 41,
+            minValue: 40,
             maxValue: 60,
             symbol: getSimpleFillSymbol(globalColors[2])
           },
           {
-            minValue: 61,
+            minValue: 60,
             maxValue: 80,
             symbol: getSimpleFillSymbol(globalColors[3])
           },
           {
-            minValue: 81,
+            minValue: 80,
             symbol: getSimpleFillSymbol(globalColors[4])
           },
         ]
@@ -124,35 +129,59 @@ export default {
         return Math.round(n*y)/y;
       }
 
-      this.featureLayer=new this.gisConstructor.FeatureLayer({
-        url: url,
-        labelingInfo: [{
-          labelExpression: "[街区编号]",
-          labelPlacement: "always-horizontal",
-          symbol: {
-            type: "text",
-            color: '#fff',
-            font: {
-              weight: "bolder",
-              size: 10
-            }
-          }
-        }],
-        outFields: [name],
-        renderer: renderer,
-        popupTemplate: {
-          actions: [],
-          overwriteActions: true,
-          content: function(g) {
-            console.log(g);
-            var div=document.createElement('div');
-            div.className='popup-div';
-            div.innerHTML=round(g.graphic.attributes[name]);
-            return div;
-          }
-        },
-        blendMode: "multiply"
-      });
+        var queryTask = new this.gisConstructor.QueryTask({
+            url: 'http://10.45.204.118:6080/arcgis/rest/services/asw/MapServer/0'
+        });
+        var name2 = name;
+        var i = name2.indexOf('_');
+        if (i >= 0) {
+            name2 = name2.substr(i + 1);
+        }
+        var query = new this.gisConstructor.Query();
+        query.returnGeometry = false;
+        query.outFields = [name2];
+        query.orderByFields = [name2 + ' desc'];
+        query.num = 10;
+        query.maxRecordCount = 10;
+        console.log(name2);
+
+        this.featureLayer = new this.gisConstructor.FeatureLayer({
+            url: url,
+            labelingInfo: [{
+                labelExpression: "[街区编号]",
+                labelPlacement: "always-horizontal",
+                symbol: {
+                    type: "text",
+                    color: '#fff',
+                    font: {
+                        weight: "bolder",
+                        size: 10
+                    }
+                }
+            }],
+            outFields: [name],
+            renderer: renderer,
+            popupTemplate: {
+                actions: [],
+                overwriteActions: true,
+                content: function (g) {
+                    //console.log(g.graphic.attributes['街区编号']);
+                    var div = document.createElement('div');
+                    div.className = 'popup-div';
+
+                    query.where = "houseid='" + g.graphic.attributes['街区编号'] + "'";
+                    query.where = "1=1";
+
+                    queryTask.execute(query).then(function (results) {
+                        console.log(results.features);
+                        div.innerHTML = '123';
+                    });
+
+                    return div;
+                }
+            },
+            blendMode: "multiply"
+        });
 
       this.map.add(this.featureLayer);
       //this.watchMapClick();
