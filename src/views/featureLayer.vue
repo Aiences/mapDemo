@@ -51,8 +51,20 @@ export default {
 
       //
       bus.$on('childList', (childList) => {
-          console.log(childList, '========childList')
-
+          console.log(childList, '========childList');
+          var $this = this;
+          function queryCount(item) {
+              var queryTask = new $this.gisConstructor.QueryTask({
+                  url: item.url
+              });
+              queryTask.executeForCount({ where:""}).then(function (count) {
+                  //console.log(count);
+                  item.count = count;
+              });
+          }
+          for (var i = 0; i < childList.length; i++) {
+              queryCount(childList[i]);
+          }
       })
 
 
