@@ -130,7 +130,7 @@ export default {
       }
 
         var queryTask = new this.gisConstructor.QueryTask({
-            url: 'http://10.45.204.118:6080/arcgis/rest/services/asw/MapServer/0'
+            url: 'http://10.45.204.118:6080/arcgis/rest/services/asw/MapServer/1'
         });
         var name2 = name;
         var i = name2.indexOf('_');
@@ -139,11 +139,12 @@ export default {
         }
         var query = new this.gisConstructor.Query();
         query.returnGeometry = false;
-        query.outFields = [name2];
+        query.outFields = ['name', name2];
         query.orderByFields = [name2 + ' desc'];
+        query.returnExceededLimitFeatures = false;
+        query.start = 0;
         query.num = 10;
-        query.maxRecordCount = 10;
-        console.log(name2);
+        //console.log(name2);
 
         this.featureLayer = new this.gisConstructor.FeatureLayer({
             url: url,
@@ -165,16 +166,20 @@ export default {
                 actions: [],
                 overwriteActions: true,
                 content: function (g) {
-                    //console.log(g.graphic.attributes['街区编号']);
+                    console.log(g.graphic.attributes['街区编号']);
                     var div = document.createElement('div');
                     div.className = 'popup-div';
+                    div.innerHTML = '影响因素：' + round(g.graphic.attributes[name]);
 
-                    query.where = "houseid='" + g.graphic.attributes['街区编号'] + "'";
-                    query.where = "1=1";
+                    query.where = "街区编号='" + g.graphic.attributes['街区编号'] + "'";
+                    //query.where = "1=1";
 
                     queryTask.execute(query).then(function (results) {
-                        console.log(results.features);
-                        div.innerHTML = '123';
+                        //console.log(results.features);
+                        for (var i = 0; i < 10 && i < results.features.length; i++) {
+                            var item = results.features[i].attributes;
+                            div.innerHTML += '<br />' + item.name + ':' + round(item[name2]);
+                        }
                     });
 
                     return div;
