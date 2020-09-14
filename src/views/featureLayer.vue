@@ -52,8 +52,17 @@ export default {
 
 
     //勾选poi图层
-    bus.$on('layerSelect',(layers) => {
-      console.log(layers,'========layers')
+      bus.$on('layerSelect', (urls) => {
+        for (var i = 0; i < urls.length; i++) {
+            var layer = new this.gisConstructor.FeatureLayer({
+                url: urls[i],
+                outFields: ['*']
+            });
+            this.map.add(layer);
+            layer.visible = true;
+            console.log(urls[i]);
+        }
+        console.log(this.map)
     })
 
 
@@ -106,38 +115,18 @@ export default {
             color: '#000'
           }
         }
-      };
-
-      var renderer={
-        type: "class-breaks",
-        field: name,
-        defaultSymbol: getSimpleFillSymbol(globalColors[0]),
-        classBreakInfos: [
-          {
-            minValue: 0,
-            maxValue: 20,
-            symbol: getSimpleFillSymbol(globalColors[0])
-          },{
-            minValue: 20,
-            maxValue: 40,
-            symbol: getSimpleFillSymbol(globalColors[1])
-          },
-          {
-            minValue: 40,
-            maxValue: 60,
-            symbol: getSimpleFillSymbol(globalColors[2])
-          },
-          {
-            minValue: 60,
-            maxValue: 80,
-            symbol: getSimpleFillSymbol(globalColors[3])
-          },
-          {
-            minValue: 80,
-            symbol: getSimpleFillSymbol(globalColors[4])
-          },
-        ]
-      };
+        };
+        var renderer = {
+            type: "heatmap",
+            field: 'Shopping',
+            colorStops: [
+                { ratio: 0, color: "rgba(255, 255, 255, 0)" },
+                { ratio: 0.2, color: "rgba(255, 255, 255, 1)" },
+                { ratio: 0.5, color: "rgba(255, 140, 0, 1)" },
+                { ratio: 0.8, color: "rgba(255, 140, 0, 1)" },
+                { ratio: 1, color: "rgba(255, 0, 0, 1)" }
+            ]
+        };
 
       function round(n,d) {
         if(d==undefined) {
@@ -166,44 +155,10 @@ export default {
 
       this.featureLayer=new this.gisConstructor.FeatureLayer({
         url: url,
-        labelingInfo: [{
-          labelExpression: "[街区编号]",
-          labelPlacement: "always-horizontal",
-          symbol: {
-            type: "text",
-            color: '#fff',
-            font: {
-              weight: "bolder",
-              size: 10
-            }
-          }
-        }],
-        outFields: [name],
-        renderer: renderer,
-        popupTemplate: {
-          actions: [],
-          overwriteActions: true,
-          content: function(g) {
-            console.log(g.graphic.attributes['街区编号']);
-            var div=document.createElement('div');
-            div.className='popup-div';
-            div.innerHTML='影响因素：'+round(g.graphic.attributes[name]);
-
-            query.where="街区编号='"+g.graphic.attributes['街区编号']+"'";
-            query.where="1=1";
-
-            queryTask.execute(query).then(function(results) {
-              //console.log(results.features);
-              for(var i=0;i<10&&i<results.features.length;i++) {
-                var item=results.features[i].attributes;
-                div.innerHTML+='<br />'+item.name+':'+round(item[name2]);
-              }
-            });
-
-            return div;
-          }
-        },
-        blendMode: "multiply"
+          outFields: ['*'],
+          labelingInfo:[],
+          labelsVisible: false,
+        renderer: renderer
       });
 
       this.map.add(this.featureLayer);
