@@ -240,8 +240,9 @@ export default {
           });
         }
       });
-
-      bus.$emit('layerSelect',layers)
+      if(this.activeType<10) {
+        bus.$emit('layerSelect',layers)
+      }
 
     },
 
@@ -260,9 +261,11 @@ export default {
         name: this.paramList[this.activeType]
       }
 
-      console.log(obj,'======obj')
 
-      bus.$emit('featureLayerSelect',obj)
+      if(this.activeType<10) {
+        bus.$emit('featureLayerSelect',obj)
+      }
+
 
     },
 
@@ -385,7 +388,7 @@ export default {
   box-sizing: border-box;
   padding: 16px 0;
   max-height: 500px;
-  width: 250px;
+  width: 240px;
   background: #ffffff;
   box-shadow: 0px 8px 12px 0px rgba(0, 0, 0, 0.06);
   border-radius: 12px;
@@ -404,6 +407,7 @@ export default {
       float: left;
       padding: 0 18px;
       height: 32px;
+      font-size: 14px;
       box-sizing: border-box;
       line-height: 32px;
       text-align: center;
