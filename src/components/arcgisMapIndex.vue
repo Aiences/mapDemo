@@ -97,7 +97,7 @@ export default {
       })
 
       this.map.add(tiledLayer);
-      // this.map.add(tiledLayerAnno);
+      this.map.add(tiledLayerAnno);
 
 
       let obj={

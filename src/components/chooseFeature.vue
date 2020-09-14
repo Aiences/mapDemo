@@ -57,127 +57,130 @@ export default {
       activeType: "0",
       activeLayer: '1',
       menuList: [],
-      httpServer: "http://10.45.204.118:6080/arcgis/rest/services/",
-      MapServer: "/MapServer/",
-      findMap: {
-        '0': 'asw',
-        '1': 'ajt',
-        '2': 'com_shopping',
-        '3': 'com_education',
-        '4': 'com_medical',
-        '5': 'com_finance',
-        '6': '',
-        '7': 'com_convenience',
-        '8': 'com_economy',
-        '9': 'com_sports',
-      },
+      pointServer: 'http://10.45.204.118:6080/arcgis/rest/services/base/MapServer/',
+      httpServer: "http://10.45.204.118:6080/arcgis/rest/services/courtstreet/MapServer/",
+      // MapServer: "/MapServer/",
+      // findMap: {
+      //   '0': 'asw',
+      //   '1': 'ajt',
+      //   '2': 'com_shopping',
+      //   '3': 'com_education',
+      //   '4': 'com_medical',
+      //   '5': 'com_finance',
+      //   '6': '',
+      //   '7': 'com_convenience',
+      //   '8': 'com_economy',
+      //   '9': 'com_sports',
+      // },
       list: [
         {
           label: '商务中心可达性',value: '0',
           layerList: [
-            {label: "写字楼",value: '3',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: "写字楼",value: '6',type: 'point',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0'},{name: '街区',id: '1',value: '5',},{name: '街道',id: '2'}]
+          children: [{name: '小区',id: '0',value: '14',},{name: '街区',id: '1',value: '27',},{name: '街道',id: '2',value: '1'}]
         },
         {
           label: '交通出行便利性',value: '1',
           layerList: [
-            {label: '公交站',value: '5',type: 'tyson',code: 'OBJECTvalue',checked: false},
-            {label: '长途汽车站',value: '6',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '火车站',value: '7',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '飞机场',value: '8',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '道路',value: '9',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '加油站',value: '13',type: 'tyson',code: 'OBJECTvalue',checked: false},
-            {label: '停车场',value: '14',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '公交站',value: '8',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '长途汽车站',value: '9',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '火车站',value: '10',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '飞机场',value: '11',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '道路',value: '12',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '加油站',value: '16',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '停车场',value: '17',type: 'tyson',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0'},{name: '街区',id: '1',value: '17',},{name: '街道',id: '2'}]
+          children: [{name: '小区',id: '0',value: '15',},{name: '街区',id: '1',value: '28',},{name: '街道',id: '2',value: '2'}]
         },
         {
           label: '消费购物便利性',value: '2',
           layerList: [
-            {label: '大型超市',value: '2',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '便利店',value: '3',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '商业网店',value: '4',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '大型超市',value: '19',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '便利店',value: '20',type: 'point',code: 'OBJECTvalue',checked: false},
+            // {label: '商业网店',value: '4',type: 'point',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0'},{name: '街区',id: '1',value: '7',},{name: '街道',id: '2'}]
+          children: [{name: '小区',id: '0',value: '16',},{name: '街区',id: '1',value: '29',},{name: '街道',id: '2',value: '3'}]
         },
         {
           label: '教育资源便利性',value: '3',
           layerList: [
-            {label: '幼儿园',value: '1',type: 'tyson',code: 'OBJECTvalue',checked: false},
-            {label: '小学学区',value: '4',type: 'polygon',code: 'OBJECTvalue',checked: false},
-            {label: '中学学区',value: '5',type: 'polygon',code: 'OBJECTvalue',checked: false},
-            {label: '大学',value: '6',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '幼儿园',value: '22',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '小学学区',value: '23',type: 'polygon',code: 'OBJECTvalue',checked: false},
+            {label: '中学学区',value: '24',type: 'polygon',code: 'OBJECTvalue',checked: false},
+            {label: '大学',value: '25',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '教育培训机构',value: '26',type: 'point',code: 'OBJECTvalue',checked: false},
           ],
-
-          children: [{name: '小区',id: '0'},{name: '街区',id: '1',value: '9',},{name: '街道',id: '2'}]
+          children: [{name: '小区',id: '0',value: '17',},{name: '街区',id: '1',value: '30',},{name: '街道',id: '2',value: '4'}]
         },
         {
           label: '医疗资源便利性',value: '4',
           layerList: [
-            {label: '三甲医院',value: '3',type: 'round',code: 'OBJECTvalue',checked: false},
-            {label: '综合医院',value: '4',type: 'round',code: 'OBJECTvalue',checked: false},
-            {label: '社区医院',value: '1',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '三甲医院',value: '28',type: 'round',code: 'OBJECTvalue',checked: false},
+            {label: '综合医院',value: '29',type: 'round',code: 'OBJECTvalue',checked: false},
+            {label: '社区医院',value: '30',type: 'tyson',code: 'OBJECTvalue',checked: false},
           ],
 
-          children: [{name: '小区',id: '0'},{name: '街区',id: '1',value: '7',},{name: '街道',id: '2'}]
+          children: [{name: '小区',id: '0',value: '18',},{name: '街区',id: '1',value: '31',},{name: '街道',id: '2',value: '5'}]
         },
         {
           label: '金融服务便利性',value: '5',
           layerList: [
-            {label: '银行',value: '1',type: 'tyson',code: 'OBJECTvalue',checked: false},
-            {label: '保险公司',value: '5',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '银行',value: '32',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '保险公司',value: '34',type: 'point',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0'},{name: '街区',id: '1',value: '7',},{name: '街道',id: '2'}]
+
+          children: [{name: '小区',id: '0',value: '19',},{name: '街区',id: '1',value: '32',},{name: '街道',id: '2',value: '6'}]
         },
         {
           label: '城市景观可达性',value: '6',
           layerList: [
-            {label: '口袋公园',value: '3',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '3A及以上景区',value: '4',type: 'round',code: 'OBJECTvalue',checked: false},
+            {label: '口袋公园',value: '36',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '景区3A',value: '37',type: 'round',code: 'OBJECTvalue',checked: false},
+            {label: '景区4A',value: '38',type: 'round',code: 'OBJECTvalue',checked: false},
+            {label: '景区5A',value: '39',type: 'round',code: 'OBJECTvalue',checked: false},
           ],
 
-          children: [{name: '小区',id: '0'},{name: '街区',id: '1'},{name: '街道',id: '2'}]
+          children: [{name: '小区',id: '0',value: '20',},{name: '街区',id: '1',value: '33',},{name: '街道',id: '2',value: '7'}]
         },
         {
           label: '便民服务可达性',value: '7',
           layerList: [
-            {label: '汽车服务点',value: '5',type: 'tyson',code: 'OBJECTvalue',checked: false},
-            {label: '彩票店',value: '8',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '公厕',value: '9',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '农贸市场',value: '4',type: 'tyson',code: 'OBJECTvalue',checked: false},
-            {label: '菜场',value: '3',type: 'tyson',code: 'OBJECTvalue',checked: false},
-            {label: '餐馆',value: '12',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '药店',value: '',type: 'tyson',code: 'OBJECTvalue',checked: false},
-            {label: '理发店',value: '14',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '便民服务中心',value: '2',type: 'tyson',code: 'OBJECTvalue',checked: false},
-            {label: '派出所',value: '1',type: 'tyson',code: 'OBJECTvalue',checked: false},
-            {label: '三星级及以上酒店',value: '17',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '宾馆',value: '18',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '汽车服务点',value: '41',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '彩票店',value: '42',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '公厕',value: '43',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '农贸市场',value: '44',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '菜场',value: '45',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '餐馆',value: '46',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '药店',value: '47',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '理发店',value: '48',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '便民服务中心',value: '49',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '派出所',value: '50',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '三星级及以上酒店',value: '51',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '宾馆',value: '52',type: 'point',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0'},{name: '街区',id: '1',value: '21'},{name: '街道',id: '2'}]
+          children: [{name: '小区',id: '0',value: '21',},{name: '街区',id: '1',value: '34',},{name: '街道',id: '2',value: '8'}]
         },
         {
           label: '经济环境质量性',value: '8',
           layerList: [
-            {label: '公墓',value: '2',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '收费站',value: '3',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '产业园',value: '',type: 'round',code: 'OBJECTvalue',checked: false},
+            {label: '公墓',value: '54',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '收费站',value: '55',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '产业园',value: '56',type: 'round',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0'},{name: '街区',id: '1',value: '6'},{name: '街道',id: '2'}]
+          children: [{name: '小区',id: '0',value: '22',},{name: '街区',id: '1',value: '35',},{name: '街道',id: '2',value: '9'}]
         },
         {
           label: '文体娱乐便利性',value: '9',
           layerList: [
-            {label: '图书馆',value: '2',type: 'tyson',code: 'OBJECTvalue',checked: false},
-            {label: '体育馆',value: '',type: 'tyson',code: 'OBJECTvalue',checked: false},
-            {label: '娱乐场所',value: '6',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '健身房',value: '7',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '图书馆',value: '58',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '体育馆',value: '59',type: 'tyson',code: 'OBJECTvalue',checked: false},
+            {label: '娱乐场所',value: '60',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '健身房',value: '61',type: 'point',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0'},{name: '街区',id: '1',value: '9'},{name: '街道',id: '2'}]
+          children: [{name: '小区',id: '0',value: '23',},{name: '街区',id: '1',value: '36',},{name: '街道',id: '2',value: '10'}]
         },
-        {label: '小区价格',value: '10'},
-        {label: '总评分',value: '11'},
+        {label: '总评分',value: '24'},
       ],
       colorList: [
         {
@@ -190,17 +193,17 @@ export default {
         {label: '1000~2000',color: 'rgba(73,143,238,0.4)'},
         {label: '0~1000',color: 'rgba(151,151,151,0.4)'}
       ],
-      paramList: {0: 'Avg_商业',1: 'Avg_交通',2: 'Avg_超市',3: 'Avg_教育',4: 'Avg_医疗',5: '',6: '',7: 'Avg_环境',8: '',9: ''},
+      paramList: {0: 'avg_商务中心',1: 'avg_交通出行',2: 'avg_消费购物',3: 'avg_教育资源',4: 'avg_医疗资源 ',5: 'avg_金融服务',6: 'avg_城市景观',7: 'avg_便民服务',8: 'avg_经济环境质量性',9: 'avg_休闲娱乐'},
       childList: []
     }
   },
-  mounted() {
+  created() {
     this.list.forEach(item => {
       if(item.layerList) {
         item.layerList.forEach(obj => {
           let id=item.value
           let route=obj.value
-          let httpString=this.httpServer+this.findMap[id]+this.MapServer+route
+          let httpString=this.httpServer+route
           obj.count=0
           obj.url=httpString
         })
@@ -211,6 +214,8 @@ export default {
     this.menuList=this.list[this.activeType].children
     this.childList=this.list[this.activeType].layerList
 
+  },
+  mounted() {
     this.transLayer()
   },
   methods: {
@@ -220,8 +225,6 @@ export default {
       this.activeRoute=this.menuList[this.activeLayer].value
       this.transLayer()
       this.childList=this.list[this.activeType].layerList
-      bus.$emit('childList',this.childList)
-
     },
 
     choosePoiLayer(item) {
@@ -250,12 +253,14 @@ export default {
 
     //传送当前选中的图层
     transLayer() {
-      let httpString=this.httpServer+this.findMap[this.activeType]+this.MapServer+this.activeRoute
+      let httpString=this.httpServer+this.activeRoute
 
       let obj={
         httpString: httpString,
         name: this.paramList[this.activeType]
       }
+
+      console.log(obj,'======obj')
 
       bus.$emit('featureLayerSelect',obj)
 
