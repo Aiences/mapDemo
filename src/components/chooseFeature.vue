@@ -55,7 +55,7 @@ export default {
     return {
       activeRoute: '5',
       activeType: "0",
-      activeLayer: '1',
+      activeLayer: '0',
       menuList: [],
       pointServer: 'http://10.45.204.118:6080/arcgis/rest/services/base/MapServer/',
       httpServer: "http://10.45.204.118:6080/arcgis/rest/services/courtstreet/MapServer/",
@@ -193,7 +193,9 @@ export default {
         {label: '1000~2000',color: 'rgba(73,143,238,0.4)'},
         {label: '0~1000',color: 'rgba(151,151,151,0.4)'}
       ],
-      paramList: {0: 'avg_商务中心',1: 'avg_交通出行',2: 'avg_消费购物',3: 'avg_教育资源',4: 'avg_医疗资源 ',5: 'avg_金融服务',6: 'avg_城市景观',7: 'avg_便民服务',8: 'avg_经济环境质量性',9: 'avg_休闲娱乐'},
+      paramList: {0: 'avg_comm',1: 'avg_trans',2: 'avg_shoppi',3: 'avg_educat',4: 'avg_medica ',5: 'avg_financ',6: 'avg_city',7: 'avg_conven',8: 'avg_econom',9: 'avg_sports'},
+      paramListCom: {0: 'comm',1: 'trans',2: 'shopping',3: 'education',4: 'medical ',5: 'finance',6: 'city',7: 'convenience',8: 'economy',9: 'sports'},
+
       childList: []
     }
   },
@@ -254,13 +256,18 @@ export default {
 
     //传送当前选中的图层
     transLayer() {
-      let httpString=this.httpServer+this.activeRoute
+      let httpString=this.httpServer+this.activeLayer
+
+      if(this.activeLayer===0) {
+        let name=this.paramListCom[this.activeType]
+      } else {
+        let name=this.paramList[this.activeType]
+      }
 
       let obj={
         httpString: httpString,
-        name: this.paramList[this.activeType]
+        name: name
       }
-
 
       if(this.activeType<10) {
         bus.$emit('featureLayerSelect',obj)
