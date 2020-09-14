@@ -258,10 +258,11 @@ export default {
     transLayer() {
       let httpString=this.httpServer+this.activeLayer
 
+        let name = null
       if(this.activeLayer===0) {
-        let name=this.paramListCom[this.activeType]
+        name=this.paramListCom[this.activeType]
       } else {
-        let name=this.paramList[this.activeType]
+         name=this.paramList[this.activeType]
       }
 
       let obj={
