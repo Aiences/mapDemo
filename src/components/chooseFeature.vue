@@ -13,7 +13,7 @@
         </li>
       </ul>
 
-      <ul class="menu_right_block">
+      <ul class="menu_right_block" v-show="activeType < 10">
         <li
           v-for="item of childList"
           :key="item.value"
@@ -203,7 +203,7 @@ export default {
         item.layerList.forEach(obj => {
           let id=item.value
           let route=obj.value
-          let httpString=this.httpServer+route
+          let httpString=this.pointServer+route
           obj.count=0
           obj.url=httpString
         })
