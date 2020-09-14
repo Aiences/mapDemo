@@ -266,7 +266,8 @@ export default {
 
       let obj={
         httpString: httpString,
-        name: name
+        name: name,
+        type: this.activeLayer
       }
 
       if(this.activeType<10) {

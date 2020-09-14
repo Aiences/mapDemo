@@ -31,6 +31,8 @@ export default {
       gisConstructor: null,
       searchUrl: null,
       highlight: null,
+      typeName: {0: 'CourtName',1: 'blockno',2: 'jdxzmc'},
+      type: null,
     }
   },
   mounted() {
@@ -46,6 +48,7 @@ export default {
     bus.$on('featureLayerSelect',(msg) => {
       console.log(msg,'========msg')
       this.searchUrl=msg.httpString
+      this.type=this.typeName[msg.type]
       this.clearMap()
       this.getFeatureLayer(this.searchUrl,msg.name)
     })
@@ -155,10 +158,44 @@ export default {
 
       this.featureLayer=new this.gisConstructor.FeatureLayer({
         url: url,
-          outFields: ['*'],
-          labelingInfo:[],
-          labelsVisible: false,
-        renderer: renderer
+        labelingInfo: [{
+          labelExpression: "[街区编号]",
+          labelPlacement: "always-horizontal",
+          symbol: {
+            type: "text",
+            color: '#fff',
+            font: {
+              weight: "bolder",
+              size: 10
+            }
+          }
+        }],
+        outFields: [name],
+        renderer: renderer,
+        popupTemplate: {
+          actions: [],
+          overwriteActions: true,
+          content: function(g) {
+            console.log(g.graphic.attributes['街区编号']);
+            var div=document.createElement('div');
+            div.className='popup-div';
+            div.innerHTML='影响因素：'+round(g.graphic.attributes[name]);
+
+            query.where="街区编号='"+g.graphic.attributes['街区编号']+"'";
+            query.where="1=1";
+
+            queryTask.execute(query).then(function(results) {
+              //console.log(results.features);
+              for(var i=0;i<10&&i<results.features.length;i++) {
+                var item=results.features[i].attributes;
+                div.innerHTML+='<br />'+item.name+':'+round(item[name2]);
+              }
+            });
+
+            return div;
+          }
+        },
+        blendMode: "multiply"
       });
 
       this.map.add(this.featureLayer);
