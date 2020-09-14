@@ -2,7 +2,7 @@
   <div id="feature">
     <arcgisMapIndex class="mapBox" :gisModules="gisModules" ref="arcgisMapIndex"></arcgisMapIndex>
 
-    <chooseFeature class="chooseFeature_box"></chooseFeature>
+    <chooseFeature class="chooseFeature_box" ref="chooseFeature"></chooseFeature>
   </div>
 </template>
 <script>
@@ -39,6 +39,7 @@ export default {
       this.map=msg.map
       this.view=msg.view
       this.gisConstructor=msg.gisConstructor
+      this.getCount()
     })
 
     //特征专题勾选图层
@@ -49,35 +50,40 @@ export default {
       this.getFeatureLayer(this.searchUrl,msg.name)
     })
 
-      //
-      bus.$on('childList', (childList) => {
-          console.log(childList, '========childList');
-          var $this = this;
-          function queryCount(item) {
-              var queryTask = new $this.gisConstructor.QueryTask({
-                  url: item.url
-              });
-              queryTask.executeForCount({ where:""}).then(function (count) {
-                  //console.log(count);
-                  item.count = count;
-              });
-          }
-          for (var i = 0; i < childList.length; i++) {
-              queryCount(childList[i]);
-          }
-      })
+
+    //勾选poi图层
+    bus.$on('layerSelect',(layers) => {
+      console.log(layers,'========layers')
+    })
 
 
-      //勾选poi图层
-      bus.$on('layerSelect', (layers) => {
-          console.log(layers, '========layers')
-
-      })
   },
   methods: {
+    //获取每个图层的数量
+    getCount() {
+      let list=this.$refs.chooseFeature.list
+      var $this=this;
+      function queryCount(item) {
+        var queryTask=new $this.gisConstructor.QueryTask({
+          url: item.url
+        });
+        queryTask.executeForCount({where: ""}).then(function(count) {
+          item.count=count;
+        });
+      }
+
+      list.forEach(element => {
+        if(element.layerList) {
+          element.layerList.forEach(item => {
+            queryCount(item)
+          })
+        }
+      });
+    },
+
+
 
     clearMap() {
-
       if(this.featureLayer) {
         this.map.remove(this.featureLayer)
         this.featureLayer=null
@@ -141,67 +147,67 @@ export default {
         return Math.round(n*y)/y;
       }
 
-        var queryTask = new this.gisConstructor.QueryTask({
-            url: 'http://10.45.204.118:6080/arcgis/rest/services/asw/MapServer/1'
-        });
-        var name2 = name;
-        var i = name2.indexOf('_');
-        if (i >= 0) {
-            name2 = name2.substr(i + 1);
-        }
-        var query = new this.gisConstructor.Query();
-        query.returnGeometry = false;
-        query.outFields = ['name', name2];
-        query.orderByFields = [name2 + ' desc'];
-        query.returnExceededLimitFeatures = false;
-        query.start = 0;
-        query.num = 10;
-        //console.log(name2);
+      var queryTask=new this.gisConstructor.QueryTask({
+        url: 'http://10.45.204.118:6080/arcgis/rest/services/asw/MapServer/1'
+      });
+      var name2=name;
+      var i=name2.indexOf('_');
+      if(i>=0) {
+        name2=name2.substr(i+1);
+      }
+      var query=new this.gisConstructor.Query();
+      query.returnGeometry=false;
+      query.outFields=['name',name2];
+      query.orderByFields=[name2+' desc'];
+      query.returnExceededLimitFeatures=false;
+      query.start=0;
+      query.num=10;
 
-        this.featureLayer = new this.gisConstructor.FeatureLayer({
-            url: url,
-            labelingInfo: [{
-                labelExpression: "[街区编号]",
-                labelPlacement: "always-horizontal",
-                symbol: {
-                    type: "text",
-                    color: '#fff',
-                    font: {
-                        weight: "bolder",
-                        size: 10
-                    }
-                }
-            }],
-            outFields: [name],
-            renderer: renderer,
-            popupTemplate: {
-                actions: [],
-                overwriteActions: true,
-                content: function (g) {
-                    console.log(g.graphic.attributes['街区编号']);
-                    var div = document.createElement('div');
-                    div.className = 'popup-div';
-                    div.innerHTML = '影响因素：' + round(g.graphic.attributes[name]);
 
-                    query.where = "街区编号='" + g.graphic.attributes['街区编号'] + "'";
-                    //query.where = "1=1";
+      this.featureLayer=new this.gisConstructor.FeatureLayer({
+        url: url,
+        labelingInfo: [{
+          labelExpression: "[街区编号]",
+          labelPlacement: "always-horizontal",
+          symbol: {
+            type: "text",
+            color: '#fff',
+            font: {
+              weight: "bolder",
+              size: 10
+            }
+          }
+        }],
+        outFields: [name],
+        renderer: renderer,
+        popupTemplate: {
+          actions: [],
+          overwriteActions: true,
+          content: function(g) {
+            console.log(g.graphic.attributes['街区编号']);
+            var div=document.createElement('div');
+            div.className='popup-div';
+            div.innerHTML='影响因素：'+round(g.graphic.attributes[name]);
 
-                    queryTask.execute(query).then(function (results) {
-                        //console.log(results.features);
-                        for (var i = 0; i < 10 && i < results.features.length; i++) {
-                            var item = results.features[i].attributes;
-                            div.innerHTML += '<br />' + item.name + ':' + round(item[name2]);
-                        }
-                    });
+            query.where="街区编号='"+g.graphic.attributes['街区编号']+"'";
+            query.where="1=1";
 
-                    return div;
-                }
-            },
-            blendMode: "multiply"
-        });
+            queryTask.execute(query).then(function(results) {
+              //console.log(results.features);
+              for(var i=0;i<10&&i<results.features.length;i++) {
+                var item=results.features[i].attributes;
+                div.innerHTML+='<br />'+item.name+':'+round(item[name2]);
+              }
+            });
+
+            return div;
+          }
+        },
+        blendMode: "multiply"
+      });
 
       this.map.add(this.featureLayer);
-      //this.watchMapClick();
+      // this.watchMapClick();
 
     },
 
@@ -256,9 +262,6 @@ export default {
         content: "id:"+attributes.OBJECTID_1, // content displayed in the popup
       });
     },
-
-
-
 
   },
 }
