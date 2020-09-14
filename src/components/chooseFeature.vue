@@ -13,7 +13,7 @@
         </li>
       </ul>
 
-      <ul class="menu_right_block" v-show="activeType < 10">
+      <ul class="menu_right_block" v-show="activeType < 10 && childList.length >0">
         <li
           v-for="item of childList"
           :key="item.value"
@@ -53,32 +53,18 @@ export default {
   name: 'home',
   data() {
     return {
-      activeRoute: '5',
-      activeType: "0",
+      activeType: null,
       activeLayer: '0',
-      menuList: [],
+      menuList: [{name: '小区',id: '0'},{name: '街区',id: '1'},{name: '乡镇',id: '2'},{name: '行政区',id: '3'}],
       pointServer: 'http://10.45.204.118:6080/arcgis/rest/services/base/MapServer/',
       httpServer: "http://10.45.204.118:6080/arcgis/rest/services/courtstreet/MapServer/",
-      // MapServer: "/MapServer/",
-      // findMap: {
-      //   '0': 'asw',
-      //   '1': 'ajt',
-      //   '2': 'com_shopping',
-      //   '3': 'com_education',
-      //   '4': 'com_medical',
-      //   '5': 'com_finance',
-      //   '6': '',
-      //   '7': 'com_convenience',
-      //   '8': 'com_economy',
-      //   '9': 'com_sports',
-      // },
+
       list: [
         {
           label: '商务中心可达性',value: '0',
           layerList: [
             {label: "写字楼",value: '6',type: 'point',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0',value: '14',},{name: '街区',id: '1',value: '27',},{name: '街道',id: '2',value: '1'}]
         },
         {
           label: '交通出行便利性',value: '1',
@@ -91,7 +77,6 @@ export default {
             {label: '加油站',value: '16',type: 'tyson',code: 'OBJECTvalue',checked: false},
             {label: '停车场',value: '17',type: 'tyson',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0',value: '15',},{name: '街区',id: '1',value: '28',},{name: '街道',id: '2',value: '2'}]
         },
         {
           label: '消费购物便利性',value: '2',
@@ -100,7 +85,6 @@ export default {
             {label: '便利店',value: '20',type: 'point',code: 'OBJECTvalue',checked: false},
             // {label: '商业网店',value: '4',type: 'point',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0',value: '16',},{name: '街区',id: '1',value: '29',},{name: '街道',id: '2',value: '3'}]
         },
         {
           label: '教育资源便利性',value: '3',
@@ -111,7 +95,7 @@ export default {
             {label: '大学',value: '25',type: 'point',code: 'OBJECTvalue',checked: false},
             {label: '教育培训机构',value: '26',type: 'point',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0',value: '17',},{name: '街区',id: '1',value: '30',},{name: '街道',id: '2',value: '4'}]
+
         },
         {
           label: '医疗资源便利性',value: '4',
@@ -120,8 +104,6 @@ export default {
             {label: '综合医院',value: '29',type: 'round',code: 'OBJECTvalue',checked: false},
             {label: '社区医院',value: '30',type: 'tyson',code: 'OBJECTvalue',checked: false},
           ],
-
-          children: [{name: '小区',id: '0',value: '18',},{name: '街区',id: '1',value: '31',},{name: '街道',id: '2',value: '5'}]
         },
         {
           label: '金融服务便利性',value: '5',
@@ -129,8 +111,6 @@ export default {
             {label: '银行',value: '32',type: 'tyson',code: 'OBJECTvalue',checked: false},
             {label: '保险公司',value: '34',type: 'point',code: 'OBJECTvalue',checked: false},
           ],
-
-          children: [{name: '小区',id: '0',value: '19',},{name: '街区',id: '1',value: '32',},{name: '街道',id: '2',value: '6'}]
         },
         {
           label: '城市景观可达性',value: '6',
@@ -140,8 +120,6 @@ export default {
             {label: '景区4A',value: '38',type: 'round',code: 'OBJECTvalue',checked: false},
             {label: '景区5A',value: '39',type: 'round',code: 'OBJECTvalue',checked: false},
           ],
-
-          children: [{name: '小区',id: '0',value: '20',},{name: '街区',id: '1',value: '33',},{name: '街道',id: '2',value: '7'}]
         },
         {
           label: '便民服务可达性',value: '7',
@@ -159,7 +137,6 @@ export default {
             {label: '三星级及以上酒店',value: '51',type: 'point',code: 'OBJECTvalue',checked: false},
             {label: '宾馆',value: '52',type: 'point',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0',value: '21',},{name: '街区',id: '1',value: '34',},{name: '街道',id: '2',value: '8'}]
         },
         {
           label: '经济环境质量性',value: '8',
@@ -168,7 +145,6 @@ export default {
             {label: '收费站',value: '55',type: 'point',code: 'OBJECTvalue',checked: false},
             {label: '产业园',value: '56',type: 'round',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0',value: '22',},{name: '街区',id: '1',value: '35',},{name: '街道',id: '2',value: '9'}]
         },
         {
           label: '文体娱乐便利性',value: '9',
@@ -178,7 +154,6 @@ export default {
             {label: '娱乐场所',value: '60',type: 'point',code: 'OBJECTvalue',checked: false},
             {label: '健身房',value: '61',type: 'point',code: 'OBJECTvalue',checked: false},
           ],
-          children: [{name: '小区',id: '0',value: '23',},{name: '街区',id: '1',value: '36',},{name: '街道',id: '2',value: '10'}]
         },
         {label: '总评分',value: '24'},
       ],
@@ -213,18 +188,14 @@ export default {
 
     })
 
-    this.menuList=this.list[this.activeType].children
-    this.childList=this.list[this.activeType].layerList
 
   },
   mounted() {
-    this.transLayer()
+
   },
   methods: {
     chooseType(val) {
       this.activeType=val
-      this.menuList=this.list[this.activeType].children
-      this.activeRoute=this.menuList[this.activeLayer].value
       this.transLayer()
       this.childList=this.list[this.activeType].layerList
     },
@@ -250,7 +221,6 @@ export default {
 
     chooseLayer(item) {
       this.activeLayer=item.id
-      this.activeRoute=item.value
       this.transLayer()
     },
 
@@ -258,11 +228,11 @@ export default {
     transLayer() {
       let httpString=this.httpServer+this.activeLayer
 
-        let name = null
+      let name=null
       if(this.activeLayer===0) {
         name=this.paramListCom[this.activeType]
       } else {
-         name=this.paramList[this.activeType]
+        name=this.paramList[this.activeType]
       }
 
       let obj={
