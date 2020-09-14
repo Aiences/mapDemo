@@ -59,15 +59,12 @@ export default {
         for (var i = 0; i < urls.length; i++) {
             var layer = new this.gisConstructor.FeatureLayer({
                 url: urls[i],
+                visible: true,
                 outFields: ['*']
             });
             this.map.add(layer);
-            layer.visible = true;
-            console.log(urls[i]);
         }
-        console.log(this.map)
     })
-
 
   },
   methods: {
@@ -177,11 +174,21 @@ export default {
 
       this.featureLayer=new this.gisConstructor.FeatureLayer({
           url: msg.httpString,
-
+          labelingInfo: [{
+              labelExpression: "[" + this.type+"]",
+              labelPlacement: "always-horizontal",
+              symbol: {
+                  type: "text",
+                  color: '#fff',
+                  font: {
+                      weight: "bolder",
+                      size: 12
+                  }
+              }
+          }],
         outFields: ['*'],
           renderer: renderer,
-          labelingInfo:[],
-          labelsVisible: false,
+          labelsVisible: true,
         blendMode: "multiply"
       });
 
