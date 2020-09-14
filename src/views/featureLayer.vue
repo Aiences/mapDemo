@@ -31,6 +31,8 @@ export default {
       gisConstructor: null,
       searchUrl: null,
       highlight: null,
+      typeName: {0: 'CourtName',1: 'blockno',2: 'jdxzmc'},
+      type: null,
     }
   },
   mounted() {
@@ -46,6 +48,7 @@ export default {
     bus.$on('featureLayerSelect',(msg) => {
       console.log(msg,'========msg')
       this.searchUrl=msg.httpString
+      this.type=this.typeName[msg.type]
       this.clearMap()
       this.getFeatureLayer(this.searchUrl,msg.name)
     })
@@ -167,7 +170,7 @@ export default {
       this.featureLayer=new this.gisConstructor.FeatureLayer({
         url: url,
         labelingInfo: [{
-          labelExpression: "[街区编号]",
+          labelExpression: this.type,
           labelPlacement: "always-horizontal",
           symbol: {
             type: "text",
