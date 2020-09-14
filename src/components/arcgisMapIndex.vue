@@ -47,7 +47,7 @@ export default {
     initMap() {
       const tiandituBaseUrl="http://{subDomain}.tianditu.gov.cn"; //天地图服务地址
       const token="ff8f0c7ab946f2a41a42a5bede812b02"; //天地图token
-
+      // this.gisConstructor.config.fontsUrl="http://localhost:8080/4.16/esri/themes/base/icons/fonts"
       this.map=new this.gisConstructor.Map();
 
       this.view=new this.gisConstructor.MapView({
@@ -97,7 +97,7 @@ export default {
       })
 
       this.map.add(tiledLayer);
-      this.map.add(tiledLayerAnno);
+      // this.map.add(tiledLayerAnno);
 
 
       let obj={

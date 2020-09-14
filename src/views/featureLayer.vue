@@ -17,6 +17,7 @@ export default {
   data() {
     return {
       gisModules: [
+        "esri/config",
         'esri/tasks/support/IdentifyParameters',
         "esri/tasks/IdentifyTask",
         "esri/tasks/support/Query",
@@ -50,20 +51,32 @@ export default {
       this.searchUrl=msg.httpString
       this.type=this.typeName[msg.type]
       this.clearMap()
-        this.getFeatureLayer(msg)
+      this.getFeatureLayer(msg)
     })
 
 
     //勾选poi图层
-      bus.$on('layerSelect', (urls) => {
-        for (var i = 0; i < urls.length; i++) {
-            var layer = new this.gisConstructor.FeatureLayer({
-                url: urls[i],
-                visible: true,
-                outFields: ['*']
-            });
-            this.map.add(layer);
-        }
+    bus.$on('layerSelect',(urls) => {
+      for(var i=0;i<urls.length;i++) {
+        var layer=new this.gisConstructor.FeatureLayer({
+          url: urls[i],
+          labelingInfo: [{
+            labelExpression: "[name]",
+            labelPlacement: "always-horizontal",
+            symbol: {
+              type: "text",
+              color: '#404040',
+              font: {
+                weight: "bolder",
+                size: 12
+              }
+            }
+          }],
+          visible: true,
+          outFields: ['*']
+        });
+        this.map.add(layer);
+      }
     })
 
   },
@@ -115,37 +128,37 @@ export default {
             color: '#000'
           }
         }
-        };
-        var renderer = {
-            type: "class-breaks",
-            field: name,
-            defaultSymbol: getSimpleFillSymbol(globalColors[0]),
-            classBreakInfos: [
-                {
-                    minValue: 0,
-                    maxValue: 20,
-                    symbol: getSimpleFillSymbol(globalColors[0])
-                }, {
-                    minValue: 20,
-                    maxValue: 40,
-                    symbol: getSimpleFillSymbol(globalColors[1])
-                },
-                {
-                    minValue: 40,
-                    maxValue: 60,
-                    symbol: getSimpleFillSymbol(globalColors[2])
-                },
-                {
-                    minValue: 60,
-                    maxValue: 80,
-                    symbol: getSimpleFillSymbol(globalColors[3])
-                },
-                {
-                    minValue: 80,
-                    symbol: getSimpleFillSymbol(globalColors[4])
-                },
-            ]
-        };
+      };
+      var renderer={
+        type: "class-breaks",
+        field: name,
+        defaultSymbol: getSimpleFillSymbol(globalColors[0]),
+        classBreakInfos: [
+          {
+            minValue: 0,
+            maxValue: 20,
+            symbol: getSimpleFillSymbol(globalColors[0])
+          },{
+            minValue: 20,
+            maxValue: 40,
+            symbol: getSimpleFillSymbol(globalColors[1])
+          },
+          {
+            minValue: 40,
+            maxValue: 60,
+            symbol: getSimpleFillSymbol(globalColors[2])
+          },
+          {
+            minValue: 60,
+            maxValue: 80,
+            symbol: getSimpleFillSymbol(globalColors[3])
+          },
+          {
+            minValue: 80,
+            symbol: getSimpleFillSymbol(globalColors[4])
+          },
+        ]
+      };
 
       function round(n,d) {
         if(d==undefined) {
@@ -173,27 +186,27 @@ export default {
 
 
       this.featureLayer=new this.gisConstructor.FeatureLayer({
-          url: msg.httpString,
-          labelingInfo: [{
-              labelExpression: "[" + this.type+"]",
-              labelPlacement: "always-horizontal",
-              symbol: {
-                  type: "text",
-                  color: '#fff',
-                  font: {
-                      weight: "bolder",
-                      size: 12
-                  }
-              }
-          }],
+        url: msg.httpString,
+        labelingInfo: [{
+          labelExpression: "["+this.type+"]",
+          labelPlacement: "always-horizontal",
+          symbol: {
+            type: "text",
+            color: '#FF5C4D',
+            font: {
+              weight: "bolder",
+              size: 12
+            }
+          }
+        }],
         outFields: ['*'],
-          renderer: renderer,
-          labelsVisible: true,
+        renderer: renderer,
+        labelsVisible: true,
         blendMode: "multiply"
       });
 
       this.map.add(this.featureLayer);
-      // this.watchMapClick();
+      this.watchMapClick();
 
     },
 
