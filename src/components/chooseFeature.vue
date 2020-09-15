@@ -193,23 +193,24 @@ export default {
 
   },
   methods: {
+    //一级指标勾选
     chooseType(val) {
+      if(this.activeType==null) {
+        this.transLayer(val)
+      } else {
+        let name=this.activeLayer==0? this.paramListCom[val]:this.paramList[val]
+        //传送当前选中的指标
+        console.log(name,'=======name')
+        bus.$emit('target',name)
+      }
+
       this.activeType=val
       this.childList=this.list[this.activeType].layerList
 
-
-      let name=null
-      if(this.activeLayer===0) {
-        name=this.paramListCom[this.activeType]
-      } else {
-        name=this.paramList[this.activeType]
-      }
-
-      //传送当前选中的指标
-      bus.$emit('target',name)
-
     },
 
+
+    //选中poi图层
     choosePoiLayer(item) {
       item.checked=!item.checked
 
@@ -229,25 +230,27 @@ export default {
 
     },
 
+
+    //选择区块级别
     chooseLayer(item) {
       this.activeLayer=item.id
       this.activeRoute=item.value
 
       if(this.activeType) {
-        this.transLayer()
+        this.transLayer(this.activeType)
       }
 
     },
 
     //传送当前选中的图层
-    transLayer() {
+    transLayer(val) {
       let httpString=this.pointServer+this.activeRoute
 
       let name=null
       if(this.activeLayer==0) {
-        name=this.paramListCom[this.activeType]
+        name=this.paramListCom[val]
       } else {
-        name=this.paramList[this.activeType]
+        name=this.paramList[val]
       }
 
       let obj={
