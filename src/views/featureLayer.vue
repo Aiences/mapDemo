@@ -169,26 +169,21 @@ export default {
       }
 
       var queryTask=new this.gisConstructor.QueryTask({
-        url: 'http://10.45.204.118:6080/arcgis/rest/services/asw/MapServer/1'
+          url: 'http://10.45.204.118:6080/arcgis/rest/services/courtstreet/MapServer/0'
       });
-      var name2=name;
-      var i=name2.indexOf('_');
-      if(i>=0) {
-        name2=name2.substr(i+1);
-      }
+        var name2 ='Shopping';
       var query=new this.gisConstructor.Query();
       query.returnGeometry=false;
-      query.outFields=['name',name2];
+      query.outFields=['*'];
       query.orderByFields=[name2+' desc'];
       query.returnExceededLimitFeatures=false;
       query.start=0;
       query.num=10;
 
-
       this.featureLayer=new this.gisConstructor.FeatureLayer({
         url: msg.httpString,
         labelingInfo: [{
-          labelExpression: "["+this.type+"]",
+            labelExpression: "[" + this.type+"]",
           labelPlacement: "always-horizontal",
           symbol: {
             type: "text",
@@ -201,12 +196,33 @@ export default {
         }],
         outFields: ['*'],
         renderer: renderer,
-        labelsVisible: true,
+          popupTemplate: {
+              actions: [],
+              overwriteActions: true,
+              content: function (g) {
+                  //console.log(g.graphic.attributes);
+                  var div = document.createElement('div');
+                  div.className = 'popup-div';
+                  div.innerHTML = '影响因素：' + round(g.graphic.attributes[msg.name]);
+
+                  query.where = "BlockId='" + g.graphic.attributes['blockno'] + "'";
+
+                  queryTask.execute(query).then(function (results) {
+                      //console.log(results.features);
+                      for (var i = 0; i < 10 && i < results.features.length; i++) {
+                          var item = results.features[i].attributes;
+                          div.innerHTML += '<br />' + item.CourtName + ':' + round(item[name2]);
+                      }
+                  });
+
+                  return div;
+              }
+          },
         blendMode: "multiply"
       });
 
       this.map.add(this.featureLayer);
-      this.watchMapClick();
+      //this.watchMapClick();
 
     },
 
