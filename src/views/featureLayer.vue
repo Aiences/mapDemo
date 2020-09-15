@@ -32,7 +32,9 @@ export default {
       gisConstructor: null,
       searchUrl: null,
       highlight: null,
-      typeName: {0: 'CourtName',1: 'blockno',2: 'jdxzmc'},
+        typeName: { 0: 'CourtName', 1: 'blockno', 2: 'jdxzmc', 3: 'xzqmc' },
+        typeId1: { 0: 'houseid', 1: 'blockno', 2: 'jdxzdm', 3: 'xzqdm' },
+        typeId2: { 0: 'houseid', 1: 'BlockId', 2: 'jdxzdm', 3: 'XZQDM' },
       type: null,
     }
   },
@@ -54,29 +56,53 @@ export default {
       this.getFeatureLayer(msg)
     })
 
+      //传送当前选中的指标
+      bus.$on('target' , (msg) => {
+          console.log(msg, '========msg')
+
+          this.displayConfig = msg;
+          var r = this.featureLayer.renderer.clone();
+          r.valueExpression = "$feature['" + msg.otherName + "'] * 1000";
+          this.featureLayer.renderer=r;
+      })
+
 
     //勾选poi图层
-    bus.$on('layerSelect',(urls) => {
-      for(var i=0;i<urls.length;i++) {
-        var layer=new this.gisConstructor.FeatureLayer({
-          url: urls[i],
-          labelingInfo: [{
-            labelExpression: "[name]",
-            labelPlacement: "always-horizontal",
-            symbol: {
-              type: "text",
-              color: '#404040',
-              font: {
-                weight: "bolder",
-                size: 12
+      bus.$on('layerSelect', (urls) => {
+          var $map = this.map;
+          var arr = [];
+          this.map.layers.toArray().forEach(item => {
+              if (item.typeFlag == 1) {
+                  var url = item.url + '/' + item.layerId;
+                  if (urls.indexOf(url) < 0) {
+                      $map.remove(item);
+                  }
+                  else {
+                      arr.push(url);
+                  }
               }
-            }
-          }],
-          visible: true,
-          outFields: ['*']
-        });
-        this.map.add(layer);
-      }
+          });
+          urls.forEach(url => {
+              if (arr.indexOf(url) < 0) {
+                  var layer = new this.gisConstructor.FeatureLayer({
+                      url: url,
+                      labelVisible: false,
+                      visible: true,
+                      typeFlag: 1,
+                      renderer: {
+                          type: "simple",
+                          symbol: {
+                              type: "picture-marker",
+                              url: "/loa.png",
+                              width: "32px",
+                              height: "32px"
+                          }
+                      },
+                      outFields: ['*']
+                  });
+                  $map.add(layer);
+              }
+          })
     })
 
   },
@@ -115,7 +141,9 @@ export default {
 
 
     //展示特征专题图
-    getFeatureLayer(msg) {
+      getFeatureLayer(msg) {
+          var $this = this;
+          $this.displayConfig = msg;
       var globalColors=['rgba(151,151,151,0.4)','rgba(73,143,238,0.4)','rgba(0,204,102,0.4)','rgba(255,153,51,0.4)','rgba(255,92,77,0.4)'];
 
       function getSimpleFillSymbol(color) {
@@ -131,7 +159,8 @@ export default {
       };
       var renderer={
         type: "class-breaks",
-        field: name,
+          //field: $this.displayConfig.otherName,
+          valueExpression: "$feature['" + $this.displayConfig.otherName+"'] * 1000",
         defaultSymbol: getSimpleFillSymbol(globalColors[0]),
         classBreakInfos: [
           {
@@ -169,19 +198,17 @@ export default {
       }
 
       var queryTask=new this.gisConstructor.QueryTask({
-          url: 'http://10.45.204.118:6080/arcgis/rest/services/courtstreet/MapServer/0'
+          url: 'http://10.45.204.118:6080/arcgis/rest/services/base/MapServer/53'
       });
-        var name2 ='Shopping';
       var query=new this.gisConstructor.Query();
       query.returnGeometry=false;
       query.outFields=['*'];
-      query.orderByFields=[name2+' desc'];
       query.returnExceededLimitFeatures=false;
       query.start=0;
-      query.num=10;
-
+          query.num = 10;
       this.featureLayer=new this.gisConstructor.FeatureLayer({
-        url: msg.httpString,
+          url: $this.displayConfig.httpString,
+          typeFlag: 0,
         labelingInfo: [{
             labelExpression: "[" + this.type+"]",
           labelPlacement: "always-horizontal",
@@ -203,15 +230,18 @@ export default {
                   //console.log(g.graphic.attributes);
                   var div = document.createElement('div');
                   div.className = 'popup-div';
-                  div.innerHTML = '影响因素：' + round(g.graphic.attributes[msg.name]);
-
-                  query.where = "BlockId='" + g.graphic.attributes['blockno'] + "'";
+                  div.innerHTML = '影响因素：' + round(g.graphic.attributes[$this.displayConfig.otherName]);
+                  
+                  query.where = $this.typeId2[$this.displayConfig.type] + "='" + g.graphic.attributes[$this.typeId1[$this.displayConfig.type]] + "'";
+                  query.orderByFields = [$this.displayConfig.name + ' desc'];
+                  console.log(query.where);
+                  //query.where ='1=1'
 
                   queryTask.execute(query).then(function (results) {
                       //console.log(results.features);
                       for (var i = 0; i < 10 && i < results.features.length; i++) {
                           var item = results.features[i].attributes;
-                          div.innerHTML += '<br />' + item.CourtName + ':' + round(item[name2]);
+                          div.innerHTML += '<br />' + item.CourtName + ':' + round(item[$this.displayConfig.name]);
                       }
                   });
 
