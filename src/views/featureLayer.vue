@@ -49,7 +49,6 @@ export default {
 
     //特征专题勾选图层
     bus.$on('featureLayerSelect',(msg) => {
-      console.log(msg,'========msg')
       this.searchUrl=msg.httpString
       this.type=this.typeName[msg.type]
       this.clearMap()
@@ -58,9 +57,11 @@ export default {
 
       //传送当前选中的指标
       bus.$on('target' , (msg) => {
-          console.log(msg, '========msg')
-
-          this.displayConfig = msg;
+          if (this.view.popup) {
+              this.view.popup.close();
+          }
+          this.displayConfig.name = msg.name;
+          this.displayConfig.otherName = msg.otherName;
           var r = this.featureLayer.renderer.clone();
           r.valueExpression = "$feature['" + msg.otherName + "'] * 1000";
           this.featureLayer.renderer=r;
@@ -144,6 +145,9 @@ export default {
       getFeatureLayer(msg) {
           var $this = this;
           $this.displayConfig = msg;
+          if ($this.view.popup) {
+              $this.view.popup.close();
+          }
       var globalColors=['rgba(151,151,151,0.4)','rgba(73,143,238,0.4)','rgba(0,204,102,0.4)','rgba(255,153,51,0.4)','rgba(255,92,77,0.4)'];
 
       function getSimpleFillSymbol(color) {
@@ -231,7 +235,7 @@ export default {
                   var div = document.createElement('div');
                   div.className = 'popup-div';
                   div.innerHTML = '影响因素：' + round(g.graphic.attributes[$this.displayConfig.otherName]);
-                  
+
                   query.where = $this.typeId2[$this.displayConfig.type] + "='" + g.graphic.attributes[$this.typeId1[$this.displayConfig.type]] + "'";
                   query.orderByFields = [$this.displayConfig.name + ' desc'];
                   console.log(query.where);
