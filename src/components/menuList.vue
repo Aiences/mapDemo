@@ -63,7 +63,7 @@ export default {
       },
       {
         name: "POI",
-        path: "/analyse",
+        path: "/poi",
         children: [],
         icon: "iconfont icon-home",
       },

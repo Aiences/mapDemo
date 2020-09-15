@@ -11,6 +11,7 @@ const router=new Router({
       path: '/',name: 'layout',component: layout,
       children: [
         {path: '/feature',component: () => import('@/views/featureLayer'),name: 'feature'},
+        {path: '/poi',component: () => import('@/views/poilayer'),name: 'poilayer'},
         {path: '/home',component: () => import('@/views/home'),name: 'home'},
         {path: '/arcgismap',component: () => import('@/views/mapShow'),name: 'mapShow'},
         {path: '/querymap',component: () => import('@/views/queryMap'),name: 'queryMap'},

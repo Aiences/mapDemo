@@ -271,7 +271,7 @@ export default {
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss" scoped>
+<style lang="scss" scoped >
 .menu_block {
   width: 508px;
   display: table;
