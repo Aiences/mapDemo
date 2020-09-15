@@ -198,10 +198,12 @@ export default {
       if(this.activeType==null) {
         this.transLayer(val)
       } else {
-        let name=this.activeLayer==0? this.paramListCom[val]:this.paramList[val]
+        let obj={
+          name: this.paramListCom[val],
+          otherName: this.paramList[val]
+        }
         //传送当前选中的指标
-        console.log(name,'=======name')
-        bus.$emit('target',name)
+        bus.$emit('target',obj)
       }
 
       this.activeType=val
@@ -246,23 +248,16 @@ export default {
     transLayer(val) {
       let httpString=this.pointServer+this.activeRoute
 
-      let name=null
-      if(this.activeLayer==0) {
-        name=this.paramListCom[val]
-      } else {
-        name=this.paramList[val]
-      }
-
       let obj={
         httpString: httpString,
-        name: name,
+        name: this.paramListCom[val],
+        otherName: this.paramList[val],
         type: this.activeLayer
       }
 
       if(this.activeType<10) {
         bus.$emit('featureLayerSelect',obj)
       }
-
 
     },
 
