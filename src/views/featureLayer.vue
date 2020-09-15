@@ -234,7 +234,7 @@ export default {
                   //console.log(g.graphic.attributes);
                   var div = document.createElement('div');
                   div.className = 'popup-div';
-                  div.innerHTML = '影响因素：' + round(g.graphic.attributes[$this.displayConfig.otherName]);
+                  div.innerHTML = g.graphic.attributes[$this.type]+'影响因素：' + round(g.graphic.attributes[$this.displayConfig.otherName]);
 
                   query.where = $this.typeId2[$this.displayConfig.type] + "='" + g.graphic.attributes[$this.typeId1[$this.displayConfig.type]] + "'";
                   query.orderByFields = [$this.displayConfig.name + ' desc'];
