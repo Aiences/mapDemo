@@ -55,10 +55,9 @@ export default {
     return {
       activeType: null,
       activeLayer: '0',
-      menuList: [{name: '小区',id: '0'},{name: '街区',id: '1'},{name: '乡镇',id: '2'},{name: '行政区',id: '3'}],
+      activeRoute: '53',
+      menuList: [{name: '小区',id: '0',value: '53'},{name: '街区',id: '1',value: '45'},{name: '乡镇',id: '2',value: '58'},{name: '行政区',id: '3',value: '57'}],
       pointServer: 'http://10.45.204.118:6080/arcgis/rest/services/base/MapServer/',
-      httpServer: "http://10.45.204.118:6080/arcgis/rest/services/courtstreet/MapServer/",
-
       list: [
         {
           label: '商务中心可达性',value: '0',
@@ -153,7 +152,7 @@ export default {
             {label: '图书馆',value: '29',type: 'tyson',code: 'OBJECTvalue',checked: false},
             {label: '体育馆',value: '27',type: 'tyson',code: 'OBJECTvalue',checked: false},
             {label: '娱乐场所',value: '37',type: 'point',code: 'OBJECTvalue',checked: false},
-            {label: '健身房',value: '14',type: 'point',code: 'OBJECTvalue',checked: false},
+            {label: '健身房',value: '',type: 'point',code: 'OBJECTvalue',checked: false},
           ],
         },
         {label: '总评分',value: '24'},
@@ -169,9 +168,8 @@ export default {
         {label: '1000~2000',color: 'rgba(73,143,238,0.4)'},
         {label: '0~1000',color: 'rgba(151,151,151,0.4)'}
       ],
-      paramList: {0: 'avg_comm',1: 'avg_trans',2: 'avg_shoppi',3: 'avg_educat',4: 'avg_medica ',5: 'avg_financ',6: 'avg_city',7: 'avg_conven',8: 'avg_econom',9: 'avg_sports'},
-      paramListCom: {0: 'comm',1: 'trans',2: 'shopping',3: 'education',4: 'medical ',5: 'finance',6: 'city',7: 'convenience',8: 'economy',9: 'sports'},
-
+      paramList: {0: 'avg_comm',1: 'avg_trans',2: 'avg_shopping',3: 'avg_education',4: 'avg_medical ',5: 'avg_finance',6: 'avg_city',7: 'avg_convenience',8: 'avg_economy',9: 'avg_sports'},
+      paramListCom: {0: 'Comm',1: 'Trans',2: 'Shopping',3: 'Education',4: 'Medical ',5: 'Finance',6: 'City',7: 'Convenience',8: 'Economy',9: 'Sports'},
       childList: []
     }
   },
@@ -197,8 +195,19 @@ export default {
   methods: {
     chooseType(val) {
       this.activeType=val
-      this.transLayer()
       this.childList=this.list[this.activeType].layerList
+
+
+      let name=null
+      if(this.activeLayer===0) {
+        name=this.paramListCom[this.activeType]
+      } else {
+        name=this.paramList[this.activeType]
+      }
+
+      //传送当前选中的指标
+      bus.$emit('target',name)
+
     },
 
     choosePoiLayer(item) {
@@ -222,15 +231,20 @@ export default {
 
     chooseLayer(item) {
       this.activeLayer=item.id
-      this.transLayer()
+      this.activeRoute=item.value
+
+      if(this.activeType) {
+        this.transLayer()
+      }
+
     },
 
     //传送当前选中的图层
     transLayer() {
-      let httpString=this.httpServer+this.activeLayer
+      let httpString=this.pointServer+this.activeRoute
 
       let name=null
-      if(this.activeLayer===0) {
+      if(this.activeLayer==0) {
         name=this.paramListCom[this.activeType]
       } else {
         name=this.paramList[this.activeType]
