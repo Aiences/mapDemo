@@ -119,16 +119,15 @@ export default {
 
       runQuery() {
           this.updateBufferGraphic(this.bufferSize);
-          var g = this.sketchGeometry;
-          var b = this.bufferGeometry;
+          var g = null;
+          if (this.bufferGeometry) {
+              g = this.bufferGeometry;
+          }
+          else if (this.sketchGeometry && this.sketchGeometry.type == "polygon"){
+              g = this.sketchGeometry;
+          }
           this.layerViewArr.forEach(view => {
-              if (b) {
-                  view.filter = {
-                      geometry: b,
-                      spatialRelationship: "contains"
-                  };
-              }
-              else if (g && g.type == "polygon") {
+              if (g) {
                   view.filter = {
                       geometry: g,
                       spatialRelationship: "contains"
@@ -179,7 +178,8 @@ export default {
       this.sketchViewModel.cancel()
       this.sketchLayer.removeAll()
       this.bufferLayer.removeAll()
-      this.bufferSize=0
+        this.bufferSize = 0
+        this.runQuery()
     },
 
     //添加工具
