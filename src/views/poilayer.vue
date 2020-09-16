@@ -53,7 +53,8 @@ export default {
         "esri/widgets/Slider",
         "esri/geometry/geometryEngine",
         "esri/Graphic",
-        "esri/core/promiseUtils",
+            "esri/core/promiseUtils",
+            "esri/core/Collection",
         "esri/config",
         'esri/tasks/support/IdentifyParameters',
         "esri/tasks/IdentifyTask",
@@ -65,11 +66,10 @@ export default {
         "esri/layers/FeatureLayer",
         "esri/widgets/Legend"],
       map: null,
-      view: null,
+        view: null,
+        layerViewArr: null,
       gisConstructor: null,
-      highlight: null,
       bufferSize: 0,
-      sceneLayerView: null,
       geometryEngine: null,
 
     }
@@ -79,17 +79,17 @@ export default {
     bus.$on('initmap',(msg) => {
       this.map=msg.map
       this.view=msg.view
-      this.gisConstructor=msg.gisConstructor
+        this.gisConstructor = msg.gisConstructor
+        this.layerViewArr = new this.gisConstructor.Collection();
       this.getCount()
       this.loadTools()
     })
 
     //加载poi图层
     bus.$on('poiLayerSelect',(urls) => {
-      console.log(urls,'=======urls')
+      //console.log(urls,'=======urls')
       this.showPoi(urls)
-      this.setSceneLayer()
-
+        this.runQuery()
     })
 
   },
@@ -117,66 +117,35 @@ export default {
       this.runQuery()
     },
 
-    runQuery() {
-      let _this=this
-      let promiseUtils=this.gisConstructor.promiseUtils
-      // set the geometry query on the visible SceneLayerView
-      var debouncedRunQuery=promiseUtils.debounce(function() {
-        if(!_this.sketchGeometry) {
-          return
-        }
-
-        _this.resultBox=true
-        _this.updateBufferGraphic(_this.bufferSize)
-        return promiseUtils.eachAlways([
-          // _this.queryStatistics(),
-          _this.updateSceneLayer()
-        ])
-      })
-
-      debouncedRunQuery().catch((error) => {
-        if(error.name==="AbortError") {
-          return
-        }
-
-        console.error(error)
-      })
+      runQuery() {
+          this.updateBufferGraphic(this.bufferSize);
+          var g = this.sketchGeometry;
+          var b = this.bufferGeometry;
+          this.layerViewArr.forEach(view => {
+              if (b) {
+                  view.filter = {
+                      geometry: b,
+                      spatialRelationship: "contains"
+                  };
+              }
+              else if (g && g.type == "polygon") {
+                  view.filter = {
+                      geometry: g,
+                      spatialRelationship: "contains"
+                  };
+              }
+              else {
+                  view.filter = null;
+              }
+          });
     },
-
-    //更新地图上查询结果
-    updateSceneLayer() {
-      if(this.sceneLayerView) {
-        const query=this.sceneLayerView.createQuery()
-        query.geometry=this.sketchGeometry
-        query.distance=this.bufferSize
-        return this.sceneLayerView.queryObjectIds(query).
-          then((res) => {
-            console.log(res,'======res')
-            this.highlightObjects(res)
-          })
-      } else {
-        this.$message('请勾选图层')
-      }
-
-
-    },
-
-    //高亮处理
-    highlightObjects(objectIds) {
-      // Remove any previous highlighting
-      this.clearHighlighting()
-      const objectIdField=this.sceneLayer.objectIdField
-      this.count=objectIds.length
-      this.highlightHandle=this.sceneLayerView.highlight(objectIds)
-    },
-
 
     //更新缓冲区
     updateBufferGraphic(buffer) {
       // add a polygon graphic for the buffer
       let _this=this
       if(buffer>0) {
-        var bufferGeometry=this.geometryEngine.geodesicBuffer(
+          _this.bufferGeometry=this.geometryEngine.geodesicBuffer(
           _this.sketchGeometry,
           buffer,
           "meters"
@@ -184,15 +153,16 @@ export default {
         if(this.bufferLayer.graphics.length===0) {
           this.bufferLayer.add(
             new this.gisConstructor.Graphic({
-              geometry: bufferGeometry,
+                geometry: _this.bufferGeometry,
               symbol: _this.sketchViewModel.polygonSymbol
             })
           )
         } else {
-          this.bufferLayer.graphics.getItemAt(0).geometry=bufferGeometry
+            this.bufferLayer.graphics.getItemAt(0).geometry =_this.bufferGeometry
         }
       } else {
-        this.bufferLayer.removeAll()
+          this.bufferLayer.removeAll()
+          _this.bufferGeometry = null;
       }
     },
 
@@ -209,20 +179,8 @@ export default {
       this.sketchViewModel.cancel()
       this.sketchLayer.removeAll()
       this.bufferLayer.removeAll()
-      this.clearHighlighting()
       this.bufferSize=0
-      this.resultBox=false
     },
-
-    //清空高亮
-    clearHighlighting() {
-      if(this.highlightHandle) {
-        this.highlightHandle.remove()
-        this.highlightHandle=null
-      }
-    },
-
-
 
     //添加工具
     loadTools() {
@@ -234,8 +192,6 @@ export default {
       this.sketchLayer=sketchLayer
       this.bufferLayer=bufferLayer
 
-      // use SketchViewModel to draw polygons that are used as a query
-      let sketchGeometry=null
       const sketchViewModel=new this.gisConstructor.SketchViewModel({
         layer: this.sketchLayer,
         defaultUpdateOptions: {
@@ -253,27 +209,9 @@ export default {
 
     },
 
-
-    //设置勾选的图层为查询图层
-    setSceneLayer() {
-      // Assign scene layer once webscene is loaded and initialize UI
-      this.sceneLayer=this.map.layers.find((layer) => {
-        console.log(layer,'=====layer')
-        return layer.layerId===55
-      })
-
-      this.sceneLayer.outFields=['*']
-
-      this.view.whenLayerView(this.sceneLayer).then((layerView) => {
-        this.sceneLayerView=layerView
-      })
-
-      this.runQuery()
-
-    },
-
     //展示poi图层
-    showPoi(urls) {
+      showPoi(urls) {
+          var $this = this;
       var $map=this.map;
       var arr=[];
       this.map.layers.toArray().forEach(item => {
@@ -305,7 +243,14 @@ export default {
             // },
             outFields: ['*']
           });
-          $map.add(layer);
+            $map.add(layer);
+            layer.on("layerview-create", function (event) {
+                $this.layerViewArr.add(event.layerView);
+                $this.runQuery();
+            });
+            layer.on("layerview-destroy", function (event) {
+                $this.layerViewArr.remove(event.layerView);
+            });
         }
       })
 
@@ -314,7 +259,7 @@ export default {
     //获取每个图层的数量
     getCount() {
       let list=this.$refs.choosePoi.list
-      console.log(list,'=====list')
+      //console.log(list,'=====list')
       var $this=this;
       function queryCount(item) {
         var queryTask=new $this.gisConstructor.QueryTask({

@@ -47,6 +47,7 @@
     <Content Include="src\components\changeLayer.vue" />
     <Content Include="src\components\chooseFeature.vue" />
     <Content Include="src\components\chooselayer.vue" />
+    <Content Include="src\components\choosePoi.vue" />
     <Content Include="src\components\headerBar.vue" />
     <Content Include="src\components\layout.vue" />
     <Content Include="src\components\mapIndex.vue" />
@@ -64,6 +65,7 @@
     <Content Include="src\views\featureLayer.vue" />
     <Content Include="src\views\home.vue" />
     <Content Include="src\views\mapShow.vue" />
+    <Content Include="src\views\poilayer.vue" />
     <Content Include="src\views\queryMap.vue" />
     <Content Include="src\views\queryPolygon.vue" />
     <Content Include="vue.config.js" />
