@@ -34,16 +34,20 @@
       <br />
       <button class="esri-button" @click="clearGeometry()" type="button">清空</button>
     </div>
+
+    <!--鹰眼控件 -->
+    <miniMap class="mini_map"></miniMap>
   </div>
 </template>
 <script>
+import miniMap from "../components/miniMap"
 import choosePoi from "../components/choosePoi"
 import bus from "@/utils/eventBus.js"
 import arcgisMapIndex from "../components/arcgisMapIndex"
 export default {
   name: 'poilayer',
   components: {
-    arcgisMapIndex,choosePoi
+    arcgisMapIndex,choosePoi,miniMap
   },
   data() {
     return {
@@ -53,8 +57,8 @@ export default {
         "esri/widgets/Slider",
         "esri/geometry/geometryEngine",
         "esri/Graphic",
-            "esri/core/promiseUtils",
-            "esri/core/Collection",
+        "esri/core/promiseUtils",
+        "esri/core/Collection",
         "esri/config",
         'esri/tasks/support/IdentifyParameters',
         "esri/tasks/IdentifyTask",
@@ -66,8 +70,8 @@ export default {
         "esri/layers/FeatureLayer",
         "esri/widgets/Legend"],
       map: null,
-        view: null,
-        layerViewArr: null,
+      view: null,
+      layerViewArr: null,
       gisConstructor: null,
       bufferSize: 0,
       geometryEngine: null,
@@ -79,8 +83,8 @@ export default {
     bus.$on('initmap',(msg) => {
       this.map=msg.map
       this.view=msg.view
-        this.gisConstructor = msg.gisConstructor
-        this.layerViewArr = new this.gisConstructor.Collection();
+      this.gisConstructor=msg.gisConstructor
+      this.layerViewArr=new this.gisConstructor.Collection();
       this.getCount()
       this.loadTools()
     })
@@ -89,7 +93,7 @@ export default {
     bus.$on('poiLayerSelect',(urls) => {
       //console.log(urls,'=======urls')
       this.showPoi(urls)
-        this.runQuery()
+      this.runQuery()
     })
 
   },
@@ -117,26 +121,26 @@ export default {
       this.runQuery()
     },
 
-      runQuery() {
-          this.updateBufferGraphic(this.bufferSize);
-          var g = null;
-          if (this.bufferGeometry) {
-              g = this.bufferGeometry;
-          }
-          else if (this.sketchGeometry && this.sketchGeometry.type == "polygon"){
-              g = this.sketchGeometry;
-          }
-          this.layerViewArr.forEach(view => {
-              if (g) {
-                  view.filter = {
-                      geometry: g,
-                      spatialRelationship: "contains"
-                  };
-              }
-              else {
-                  view.filter = null;
-              }
-          });
+    runQuery() {
+      this.updateBufferGraphic(this.bufferSize);
+      var g=null;
+      if(this.bufferGeometry) {
+        g=this.bufferGeometry;
+      }
+      else if(this.sketchGeometry&&this.sketchGeometry.type=="polygon") {
+        g=this.sketchGeometry;
+      }
+      this.layerViewArr.forEach(view => {
+        if(g) {
+          view.filter={
+            geometry: g,
+            spatialRelationship: "contains"
+          };
+        }
+        else {
+          view.filter=null;
+        }
+      });
     },
 
     //更新缓冲区
@@ -144,7 +148,7 @@ export default {
       // add a polygon graphic for the buffer
       let _this=this
       if(buffer>0) {
-          _this.bufferGeometry=this.geometryEngine.geodesicBuffer(
+        _this.bufferGeometry=this.geometryEngine.geodesicBuffer(
           _this.sketchGeometry,
           buffer,
           "meters"
@@ -152,16 +156,16 @@ export default {
         if(this.bufferLayer.graphics.length===0) {
           this.bufferLayer.add(
             new this.gisConstructor.Graphic({
-                geometry: _this.bufferGeometry,
+              geometry: _this.bufferGeometry,
               symbol: _this.sketchViewModel.polygonSymbol
             })
           )
         } else {
-            this.bufferLayer.graphics.getItemAt(0).geometry =_this.bufferGeometry
+          this.bufferLayer.graphics.getItemAt(0).geometry=_this.bufferGeometry
         }
       } else {
-          this.bufferLayer.removeAll()
-          _this.bufferGeometry = null;
+        this.bufferLayer.removeAll()
+        _this.bufferGeometry=null;
       }
     },
 
@@ -178,8 +182,8 @@ export default {
       this.sketchViewModel.cancel()
       this.sketchLayer.removeAll()
       this.bufferLayer.removeAll()
-        this.bufferSize = 0
-        this.runQuery()
+      this.bufferSize=0
+      this.runQuery()
     },
 
     //添加工具
@@ -210,8 +214,8 @@ export default {
     },
 
     //展示poi图层
-      showPoi(urls) {
-          var $this = this;
+    showPoi(urls) {
+      var $this=this;
       var $map=this.map;
       var arr=[];
       this.map.layers.toArray().forEach(item => {
@@ -243,14 +247,14 @@ export default {
             // },
             outFields: ['*']
           });
-            $map.add(layer);
-            layer.on("layerview-create", function (event) {
-                $this.layerViewArr.add(event.layerView);
-                $this.runQuery();
-            });
-            layer.on("layerview-destroy", function (event) {
-                $this.layerViewArr.remove(event.layerView);
-            });
+          $map.add(layer);
+          layer.on("layerview-create",function(event) {
+            $this.layerViewArr.add(event.layerView);
+            $this.runQuery();
+          });
+          layer.on("layerview-destroy",function(event) {
+            $this.layerViewArr.remove(event.layerView);
+          });
         }
       })
 
@@ -286,6 +290,13 @@ export default {
 #poi {
   width: 100%;
   height: 100%;
+  position: relative;
+
+  .mini_map {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
   .choosePoi_box {
     position: absolute;
     top: 65px;
