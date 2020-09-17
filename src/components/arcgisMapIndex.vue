@@ -48,7 +48,12 @@ export default {
       const tiandituBaseUrl="http://{subDomain}.tianditu.gov.cn"; //天地图服务地址
       const token="ff8f0c7ab946f2a41a42a5bede812b02"; //天地图token
       this.gisConstructor.config.fontsUrl="http://localhost:8080/fonts"
-      this.map=new this.gisConstructor.Map();
+          this.map = new this.gisConstructor.Map({
+              basemap: {
+                  baseLayers: []
+              },
+              logo: false
+          });
 
       this.view=new this.gisConstructor.MapView({
         container: "arcgisMapIndex",
@@ -59,6 +64,21 @@ export default {
           right: 300
         }
       })
+
+          this.view.ui.remove("zoom");
+          this.view.ui.remove('attribution');
+          this.view.ui.add(new this.gisConstructor.Zoom({
+              layout: 'horizontal',
+              view: this.view
+          }), {
+              position: "bottom-right"
+          });
+          this.view.ui.add(new this.gisConstructor.ScaleBar({
+              unit: 'metric',
+              view: this.view
+          }), {
+                  position: "bottom-right"
+          });
 
       //矢量地图(球面墨卡托投影)
       const tiledLayer=new this.gisConstructor.WebTileLayer({
