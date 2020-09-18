@@ -83,7 +83,7 @@ export default {
                 miniMap.add(miniLayer1);
                 miniMap.add(miniLayer2);
 
-                var miniMapOverviewGraphic;
+                var miniMapOverviewGraphic, dragStartP;
                 function updateMiniMapOverview() {
                     var p1 = mapView.toMap({ x: 0, y: 0 });
                     var p2 = mapView.toMap({ x: mapView.width, y: mapView.height });
@@ -103,6 +103,7 @@ export default {
                                 [p2.longitude, p1.latitude]
                             ]
                         },
+                        gFLag: 1,
                         symbol: {
                             type: "simple-fill",
                             color: [90, 90, 90, 0.3],
@@ -116,8 +117,52 @@ export default {
                     miniMapView.graphics.add(miniMapOverviewGraphic);
                 }
 
+                var tm;
+                function dragMiniMapOverview(event) {
+                    if (dragStartP) {
+                        var p1 = miniMapView.toMap({ x: event.origin.x, y: event.origin.y });
+                        var p2 = miniMapView.toMap({ x: event.x, y: event.y });
+
+                        var offsetLon = p2.longitude - p1.longitude;
+                        var offsetLat = p2.latitude - p1.latitude;
+
+                        mapView.goTo({
+                            center: [dragStartP.longitude + offsetLon, dragStartP.latitude + offsetLat]
+                        });
+                    }
+                }
+
                 mapView.watch("extent", updateMiniMapOverview);
                 miniMapView.watch("extent", updateMiniMapOverview);
+
+                miniMapView.on("drag", function (event) {
+                    if (event.action == 'start') {
+                        miniMapView.hitTest(event).then(function (response) {
+                            if (response.results.length) {
+                                var graphics = response.results.filter(function (result) {
+                                    return result.graphic.gFLag == 1;
+                                });
+                                if (graphics.length) {
+                                    event.stopPropagation();
+                                    dragStartP = mapView.center;
+                                }
+                            }
+                        });
+                    }
+                    else if (event.action == 'end') {
+                        event.stopPropagation();
+                        dragStartP = null;
+                    }
+                    else if (dragStartP && event.action == 'update') {
+                        event.stopPropagation();
+                        if (!tm) {
+                            tm = setTimeout(function () {
+                                dragMiniMapOverview(event);
+                                tm = null;
+                            }, 10);
+                        }
+                    }
+                });
             }
   },
 }
