@@ -87,6 +87,32 @@ export default {
                 function updateMiniMapOverview() {
                     var p1 = mapView.toMap({ x: 0, y: 0 });
                     var p2 = mapView.toMap({ x: mapView.width, y: mapView.height });
+                    var minP1 = miniMapView.toMap({ x: -5, y: -5 });
+                    var maxP2 = miniMapView.toMap({ x: miniMapView.width + 5, y: miniMapView.height + 5 });
+                    if (p1.longitude > 0) {
+                        p1.longitude = Math.max(minP1.longitude, p1.longitude);
+                    }
+                    else {
+                        p1.longitude = minP1.longitude;
+                    }
+                    if (p1.latitude > 0) {
+                        p1.latitude = Math.min(minP1.latitude, p1.latitude);
+                    }
+                    else {
+                        p1.latitude = minP1.latitude;
+                    }
+                    if (p2.longitude > 0) {
+                        p2.longitude = Math.min(maxP2.longitude, p2.longitude);
+                    }
+                    else {
+                        p2.longitude = maxP2.longitude;
+                    }
+                    if (p2.latitude > 0) {
+                        p2.latitude = Math.max(maxP2.latitude, p2.latitude);
+                    }
+                    else {
+                        p2.latitude = maxP2.latitude;
+                    }
 
                     if (miniMapOverviewGraphic) {
                         miniMapView.graphics.remove(miniMapOverviewGraphic);

@@ -55,10 +55,13 @@ export default {
               logo: false
           });
 
-      this.view=new this.gisConstructor.MapView({
-        container: "arcgisMapIndex",
-        map: this.map,
-        scale: 10000,
+          this.view = new this.gisConstructor.MapView({
+              container: "arcgisMapIndex",
+              map: this.map,
+              scale: 10000,
+              constraints: {
+                  minScale: 37000000 
+              },
         center: [119.4378,32.4289],
         padding: {
           right: 300
