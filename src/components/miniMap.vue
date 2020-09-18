@@ -117,11 +117,11 @@ export default {
                     miniMapView.graphics.add(miniMapOverviewGraphic);
                 }
 
-                var tm;
-                function dragMiniMapOverview(event) {
+                var tm, lastP;
+                function dragMiniMapOverview() {
                     if (dragStartP) {
-                        var p1 = miniMapView.toMap({ x: event.origin.x, y: event.origin.y });
-                        var p2 = miniMapView.toMap({ x: event.x, y: event.y });
+                        var p1 = miniMapView.toMap({ x: lastP.origin.x, y: lastP.origin.y });
+                        var p2 = miniMapView.toMap({ x: lastP.x, y: lastP.y });
 
                         var offsetLon = p2.longitude - p1.longitude;
                         var offsetLat = p2.latitude - p1.latitude;
@@ -130,12 +130,14 @@ export default {
                             center: [dragStartP.longitude + offsetLon, dragStartP.latitude + offsetLat]
                         });
                     }
+                    tm = null;
                 }
 
                 mapView.watch("extent", updateMiniMapOverview);
                 miniMapView.watch("extent", updateMiniMapOverview);
 
                 miniMapView.on("drag", function (event) {
+                    //event.stopPropagation();
                     if (event.action == 'start') {
                         miniMapView.hitTest(event).then(function (response) {
                             if (response.results.length) {
@@ -150,16 +152,17 @@ export default {
                         });
                     }
                     else if (event.action == 'end') {
-                        event.stopPropagation();
                         dragStartP = null;
                     }
                     else if (dragStartP && event.action == 'update') {
                         event.stopPropagation();
+                        lastP = {
+                            origin: event.origin,
+                            x: event.x,
+                            y: event.y
+                        };
                         if (!tm) {
-                            tm = setTimeout(function () {
-                                dragMiniMapOverview(event);
-                                tm = null;
-                            }, 10);
+                            tm = setTimeout(dragMiniMapOverview, 50);
                         }
                     }
                 });

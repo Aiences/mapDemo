@@ -52,7 +52,7 @@
     <Content Include="src\components\layout.vue" />
     <Content Include="src\components\mapIndex.vue" />
     <Content Include="src\components\menuList.vue" />
-	<Content Include="src\components\miniMap.vue" />
+    <Content Include="src\components\miniMap.vue" />
     <Content Include="src\main.js" />
     <Content Include="src\router.js" />
     <Content Include="src\store\getters.js" />
