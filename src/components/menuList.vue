@@ -13,16 +13,18 @@
       active-text-color="#ffd04b"
       :default-openeds="defaultOpeneds"
     >
-      <div v-for="(item,index) in menuList" :key="index">
-        <div v-if="item.children.length!=0">
+      <div v-for="(item, index) in menuList" :key="index">
+        <div v-if="item.children.length != 0">
           <el-submenu :index="item.path">
             <template slot="title">
               <i :class="item.icon"></i>
-              <span>{{item.name}}</span>
+              <span>{{ item.name }}</span>
             </template>
-            <el-menu-item-group v-for="(children,i) in item.children" :key="i">
+            <el-menu-item-group v-for="(children, i) in item.children" :key="i">
               <el-menu-item :index="children.path">
-                <router-link :to="children.path">{{children.name}}</router-link>
+                <router-link :to="children.path">{{
+                  children.name
+                }}</router-link>
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
@@ -31,7 +33,7 @@
           <el-menu-item :index="item.path">
             <router-link :to="item.path">
               <i :class="item.icon"></i>
-              <span>{{item.name}}</span>
+              <span>{{ item.name }}</span>
             </router-link>
           </el-menu-item>
         </div>
@@ -53,8 +55,14 @@ export default {
       defaultOpeneds: [],
     };
   },
-  mounted: function() {
-    this.menuList=[
+  mounted: function () {
+    this.menuList = [
+      {
+        name: "图层可视化",
+        path: "/layersVideo",
+        children: [],
+        icon: "iconfont icon-home",
+      },
       {
         name: "特征专题",
         path: "/feature",
@@ -98,14 +106,14 @@ export default {
   methods: {
     // 菜单点击事件
     handleSelect(key) {
-      this.activeMenu=key;
+      this.activeMenu = key;
     },
 
     // 默认展开菜单
     defaultOpenedsLoad() {
-      this.defaultOpeneds=[];
-      for(let item of this.menuList) {
-        if(item.children.length>0) {
+      this.defaultOpeneds = [];
+      for (let item of this.menuList) {
+        if (item.children.length > 0) {
           this.defaultOpeneds.push(item.path);
         }
       }
@@ -113,7 +121,7 @@ export default {
   },
   watch: {
     $route(to) {
-      this.activeMenu=to.path;
+      this.activeMenu = to.path;
       // to , from 分别表示从哪跳转到哪，都是一个对象
       // to.path  ( 表示的是要跳转到的路由的地址 eg: /home );
     },

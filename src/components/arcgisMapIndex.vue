@@ -7,16 +7,16 @@
   </div>
 </template>
 <script>
-import bus from "@/utils/eventBus.js"
-import {loadModules} from 'esri-loader'
+import bus from "@/utils/eventBus.js";
+import { loadModules } from "esri-loader";
 
 export default {
-  name: 'arcgisMapIndex',
+  name: "arcgisMapIndex",
   props: {
     gisModules: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
@@ -25,191 +25,164 @@ export default {
       overView: null,
       styleObject: {},
       gisConstructor: {},
-    }
+    };
   },
   mounted() {
     //初始化地图
-    loadModules(this.gisModules,{
-      version: '4.16',
-      css: 'http://localhost:8080/4.16/esri/css/main.css',
-      url: "http://localhost:8080/4.16/init.js"
+    loadModules(this.gisModules, {
+      version: "4.16",
+      css: "/4.16/esri/css/main.css",
+      url: "/4.16/init.js",
     })
       .then((args) => {
-        for(let k in args) {
-          let name=this.gisModules[k].split('/').pop()
-          this.gisConstructor[name]=args[k]
+        for (let k in args) {
+          let name = this.gisModules[k].split("/").pop();
+          this.gisConstructor[name] = args[k];
         }
-
-      }).then(this.initMap)
+      })
+      .then(this.initMap);
   },
   methods: {
     // 初始化地图
     initMap() {
-      const tiandituBaseUrl="http://{subDomain}.tianditu.gov.cn"; //天地图服务地址
-      const token="ff8f0c7ab946f2a41a42a5bede812b02"; //天地图token
-      this.gisConstructor.config.fontsUrl="http://localhost:8080/fonts"
-          this.map = new this.gisConstructor.Map({
-              basemap: {
-                  baseLayers: []
-              },
-              logo: false
-          });
+      const tiandituBaseUrl = "http://{subDomain}.tianditu.gov.cn"; //天地图服务地址
+      const token = "ff8f0c7ab946f2a41a42a5bede812b02"; //天地图token
+      this.gisConstructor.config.fontsUrl = "/fonts";
+      this.map = new this.gisConstructor.Map({
+        basemap: {
+          baseLayers: [],
+        },
+        logo: false,
+      });
 
-          this.view = new this.gisConstructor.MapView({
-              container: "arcgisMapIndex",
-              map: this.map,
-              scale: 10000,
-              constraints: {
-                  minScale: 37000000 
-              },
-        center: [119.4378,32.4289],
+      this.view = new this.gisConstructor.MapView({
+        container: "arcgisMapIndex",
+        map: this.map,
+        scale: 70000,
+        constraints: {
+          minScale: 37000000,
+        },
+        center: [119.4078, 32.4289],
         padding: {
-          right: 300
-        }
-      })
+          right: 300,
+        },
+      });
 
-          this.view.ui.remove("zoom");
-          this.view.ui.remove('attribution');
-          this.view.ui.add(new this.gisConstructor.Zoom({
-              layout: 'horizontal',
-              view: this.view
-          }), {
-              position: "bottom-right"
-          });
-          this.view.ui.add(new this.gisConstructor.ScaleBar({
-              unit: 'metric',
-              view: this.view
-          }), {
-                  position: "bottom-right"
-          });
+      this.view.ui.remove("zoom");
+      this.view.ui.remove("attribution");
 
       //矢量地图(球面墨卡托投影)
-      const tiledLayer=new this.gisConstructor.WebTileLayer({
+      const tiledLayer = new this.gisConstructor.WebTileLayer({
         urlTemplate:
-          tiandituBaseUrl+
-          "/vec_w/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=vec&STYLE=default&FORMAT=tiles&TILEMATRIXSET=w&TILEMATRIX={level}&TILEROW={row}&TILECOL={col}&tk="+
+          tiandituBaseUrl +
+          "/vec_w/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=vec&STYLE=default&FORMAT=tiles&TILEMATRIXSET=w&TILEMATRIX={level}&TILEROW={row}&TILECOL={col}&tk=" +
           token,
-        subDomains: [
-          "t0",
-          "t1",
-          "t2",
-          "t3",
-          "t4",
-          "t5",
-          "t6",
-          "t7",
-        ],
-      })
+        subDomains: ["t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7"],
+      });
 
       //矢量注记(球面墨卡托投影)
-      const tiledLayerAnno=new this.gisConstructor.WebTileLayer({
+      const tiledLayerAnno = new this.gisConstructor.WebTileLayer({
         urlTemplate:
-          tiandituBaseUrl+
-          "/cva_w/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=cva&STYLE=default&FORMAT=tiles&TILEMATRIXSET=w&TILEMATRIX={level}&TILEROW={row}&TILECOL={col}&tk="+
+          tiandituBaseUrl +
+          "/cva_w/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=cva&STYLE=default&FORMAT=tiles&TILEMATRIXSET=w&TILEMATRIX={level}&TILEROW={row}&TILECOL={col}&tk=" +
           token,
-        subDomains: [
-          "t0",
-          "t1",
-          "t2",
-          "t3",
-          "t4",
-          "t5",
-          "t6",
-          "t7",
-        ],
-      })
+        subDomains: ["t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7"],
+      });
 
       this.map.add(tiledLayer);
       // this.map.add(tiledLayerAnno);
 
-
-      let obj={
+      let obj = {
         map: this.map,
         view: this.view,
-        gisConstructor: this.gisConstructor
-      }
+        gisConstructor: this.gisConstructor,
+      };
 
-      bus.$emit('initmap',obj)
+      this.$emit("initmap", obj);
+
+      bus.$emit("initmap", obj);
 
       // this.initOverViewMap()
-
     },
 
     // 初始化鹰眼图
     initOverViewMap() {
-      const overViewMap=new this.gisConstructor.Map();
-      const regionBoundary=new this.gisConstructor.GeoJSONLayer({
+      const overViewMap = new this.gisConstructor.Map();
+      const regionBoundary = new this.gisConstructor.GeoJSONLayer({
         url: "/json/regionBoundary.json",
-        definitionExpression: "area_level ='市辖区'or area_level='县级市'or area_level='县'"
+        definitionExpression:
+          "area_level ='市辖区'or area_level='县级市'or area_level='县'",
       });
-      overViewMap.add(regionBoundary)
-      this.overView=new this.gisConstructor.MapView({
+      overViewMap.add(regionBoundary);
+      this.overView = new this.gisConstructor.MapView({
         container: "overView",
         map: overViewMap,
         constraints: {
-          rotationEnabled: false
+          rotationEnabled: false,
         },
         scale: 10000,
-        center: [119.4378,32.4289],
-      })
-      this.overView.ui.components=[];
-      this.bindOverView()
+        center: [119.4378, 32.4289],
+      });
+      this.overView.ui.components = [];
+      this.bindOverView();
     },
 
     // 主视图绑定鹰眼图
     bindOverView() {
-      const self=this
+      const self = this;
       this.overView.when(() => {
         // 更改鹰眼选框范围
-        this.view.watch("extent",this.updateOverviewExtent);
-        this.overView.watch("extent",this.updateOverviewExtent)
+        this.view.watch("extent", this.updateOverviewExtent);
+        this.overView.watch("extent", this.updateOverviewExtent);
         // 静止时更新鹰眼底图范围
-        this.gisConstructor.watchUtils.when(this.view,"stationary",this.updateOverview);
+        this.gisConstructor.watchUtils.when(
+          this.view,
+          "stationary",
+          this.updateOverview
+        );
       });
     },
 
     updateOverview() {
       this.overView.goTo({
         center: this.view.center,
-        scale: this.view.scale*2*
+        scale:
+          this.view.scale *
+          2 *
           Math.max(
-            this.view.width/this.overView.width,
-            this.view.height/this.overView.height
-          )
+            this.view.width / this.overView.width,
+            this.view.height / this.overView.height
+          ),
       });
     },
 
     updateOverviewExtent() {
-      if(!this.view.extent)
-        return
-      const extent=this.view.extent;
-      const bottomLeft=this.overView.toScreen(
+      if (!this.view.extent) return;
+      const extent = this.view.extent;
+      const bottomLeft = this.overView.toScreen(
         new this.gisConstructor.Point({
           x: extent.xmin,
           y: extent.ymin,
-          spatialReference: extent.spatialReference
+          spatialReference: extent.spatialReference,
         })
       );
-      const topRight=this.overView.toScreen(
+      const topRight = this.overView.toScreen(
         new this.gisConstructor.Point({
           x: extent.xmax,
           y: extent.ymax,
-          spatialReference: extent.spatialReference
+          spatialReference: extent.spatialReference,
         })
       );
 
-      this.styleObject={
-        top: topRight.y+"px",
-        left: bottomLeft.x+"px",
-        height: bottomLeft.y-topRight.y+"px",
-        width: topRight.x-bottomLeft.x+"px"
-      }
-    }
-
-
-
+      this.styleObject = {
+        top: topRight.y + "px",
+        left: bottomLeft.x + "px",
+        height: bottomLeft.y - topRight.y + "px",
+        width: topRight.x - bottomLeft.x + "px",
+      };
+    },
   },
-}
+};
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>

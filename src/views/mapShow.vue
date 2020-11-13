@@ -1,15 +1,15 @@
 <template>
-  <div style="width:100%;height:100%">
+  <div style="width: 100%; height: 100%">
     <!-- <div id="testMap"></div> -->
     <div id="testMap"></div>
   </div>
 </template>
 
 <script>
-import {loadModules} from 'esri-loader'
+import { loadModules } from "esri-loader";
 
 export default {
-  name: 'mapShow',
+  name: "mapShow",
   data() {
     return {
       SketchViewModel: null,
@@ -18,144 +18,112 @@ export default {
       graphicsLayer: null,
       popupTemplate: null,
       gisConstructor: {},
-      gisModules: ['esri/Map',
-        'esri/views/MapView',
-        'esri/widgets/Sketch',
-        'esri/widgets/Sketch/SketchViewModel',
-        'esri/toolbars/draw',
-        'esri/layers/GraphicsLayer',
-        'esri/widgets/BasemapToggle']
-    }
+      gisModules: [
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/widgets/Sketch",
+        "esri/widgets/Sketch/SketchViewModel",
+        "esri/toolbars/draw",
+        "esri/layers/GraphicsLayer",
+        "esri/widgets/BasemapToggle",
+      ],
+    };
   },
   mounted() {
     //初始化地图
-    loadModules(this.gisModules,{
-      version: '4.16',
-      css: 'http://localhost:8080/4.16/esri/css/main.css',
-      url: "http://localhost:8080/4.16/init.js"
+    loadModules(this.gisModules, {
+      version: "4.16",
+      css: "/4.16/esri/css/main.css",
+      url: "/4.16/init.js",
     })
       .then((args) => {
-        for(let k in args) {
-          let name=this.gisModules[k].split('/').pop();
+        for (let k in args) {
+          let name = this.gisModules[k].split("/").pop();
           // @ts-ignore
-          this.gisConstructor[name]=args[k];
+          this.gisConstructor[name] = args[k];
         }
-
-      }).then(this.initMap);
-
+      })
+      .then(this.initMap);
   },
   methods: {
-
     // 初始化地图
     initMap() {
-      this.map=new this.gisConstructor.Map(
-        {
-          basemap: "gray-vector"
-        }
-      );
-
-      this.view=new this.gisConstructor.MapView({
-        container: "testMap",
-        map: this.map,
-        center: [-117.1708,34.0574],
-        zoom: 12,
-        padding: {
-          right: 300
-        }
+      this.map = new this.gisConstructor.Map({
+        basemap: "gray-vector",
       });
 
+      this.view = new this.gisConstructor.MapView({
+        container: "testMap",
+        map: this.map,
+        center: [-117.1708, 34.0574],
+        zoom: 12,
+        padding: {
+          right: 300,
+        },
+      });
 
-      //添加Sketch 
-      this.handleSketch()
-
+      //添加Sketch
+      this.handleSketch();
     },
-
 
     handleSketch() {
       //新建一个图形图层用于存放画图过程中的图形
-      this.graphicsLayer=new this.gisConstructor.GraphicsLayer({
+      this.graphicsLayer = new this.gisConstructor.GraphicsLayer({
         //空间参考，一般要跟地图的一样
         spatialReference: this.view.spatialReference,
       });
 
       this.map.add(this.graphicsLayer);
 
-      const sketch=new this.gisConstructor.Sketch({
+      const sketch = new this.gisConstructor.Sketch({
         layer: this.graphicsLayer,
         view: this.view,
         // graphic will be selected as soon as it is created
         // creationMode: "update"
       });
 
-      this.view.ui.add(sketch,"top-right");
+      this.view.ui.add(sketch, "top-right");
 
       // Listen to sketch widget's create event.
-      sketch.on("create",function(event) {
+      sketch.on("create", function (event) {
         // check if the create event's state has changed to complete indicating
         // the graphic create operation is completed.
-        if(event.state==="complete") {
+        if (event.state === "complete") {
           // remove the graphic from the layer. Sketch adds
           // the completed graphic to the layer by default.
           // polygonGraphicsLayer.remove(event.graphic);
-
           // use the graphic.geometry to query features that intersect it
           // selectFeatures(event.graphic.geometry);
         }
-      })
+      });
 
       // Listen to sketch widget's update event.
-      sketch.on("update",function(event) {
+      sketch.on("update", function (event) {
         // if(event.state==="active") {
         //   sketch.delete();
-        // } 
+        // }
 
-        if(event.state==="complete") {
-
-          console.log(event.graphics[0].geometry,'===========update==')
-
+        if (event.state === "complete") {
+          console.log(event.graphics[0].geometry, "===========update==");
         }
-
-
       });
 
       // Listen to sketch widget's delete event.
-      sketch.on("delete",function(event) {
-        event.graphics.forEach(function(graphic) {
-          console.log("deleted",graphic)
+      sketch.on("delete", function (event) {
+        event.graphics.forEach(function (graphic) {
+          console.log("deleted", graphic);
         });
       });
-
-
-
     },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   },
 
   beforeDestroy() {
     // destroy the map view
-    if(this.view) {
-      this.view.container=null;
+    if (this.view) {
+      this.view.container = null;
     }
-  }
-}
-
+  },
+};
 </script>
 
 <style scoped>
