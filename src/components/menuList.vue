@@ -58,6 +58,12 @@ export default {
   mounted: function () {
     this.menuList = [
       {
+        name: "颜色变化",
+        path: "/animateColor",
+        children: [],
+        icon: "iconfont icon-home",
+      },
+      {
         name: "图层可视化",
         path: "/layersVideo",
         children: [],

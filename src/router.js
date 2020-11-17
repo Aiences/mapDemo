@@ -18,6 +18,7 @@ const router = new Router({
         { path: '/queryPolygon', component: () => import('@/views/queryPolygon'), name: 'queryPolygon' },
         { path: '/analyse', component: () => import('@/views/analyse'), name: 'analyse' },
         { path: '/layersVideo', component: () => import('@/views/layersVideo'), name: 'layersVideo' },
+        { path: '/animateColor', component: () => import('@/views/animateColor'), name: 'animateColor' },
       ]
     },
 
